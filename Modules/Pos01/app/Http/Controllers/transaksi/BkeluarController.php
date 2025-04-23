@@ -1201,7 +1201,7 @@ class BkeluarController extends Controller
         ->get();
         $jml = 0;
         foreach ($tampil as $baris) {
-            $jml = $jml + $baris->bayars + $baris->vochers + $baris->ambilsavings;
+            $jml = $jml + $baris->bayars + $baris->vouchers + $baris->ambilsavings;
         }
 
         $data = Stok::limit(1)

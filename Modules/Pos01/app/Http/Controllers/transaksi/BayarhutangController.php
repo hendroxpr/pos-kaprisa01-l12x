@@ -840,9 +840,6 @@ class BayarhutangController extends Controller
                     Hutang::create($data); 
                 }
             }
-
-
-
             
         }else{
             //
@@ -879,60 +876,58 @@ class BayarhutangController extends Controller
             ->where('nomorbuktia','=', $nomorbuktia1)            
             ->get();
         return json_encode(array('data' => $data));
-
     }
 
-    public function showbarang()
+    public function showhutang()
     {
-        $barangruang = Barangruang::with('barang','seksi','ruang')
-            ->where('qty','>',0)
+        $idanggota = session('idanggota1');
+        $hutang = Hutang::where('idanggota','=',$idanggota)
+            ->where('kodepokok','=','1')
             ->get();
-        $datax = DataTables::of($barangruang                          
+        $datax = DataTables::of($hutang                          
             );
 
         $data = $datax
             ->addIndexColumn()
            
-            ->addColumn('nabara', function ($row) {
-                return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->nabara : '-') .'" class="item_nabara " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->nabara : '-').'</a> ';
+            // ->addColumn('nabara', function ($row) {
+            //     return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->nabara : '-') .'" class="item_nabara " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->nabara : '-').'</a> ';
+            // })
+            // ->addColumn('kode', function ($row) {
+            //     return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->kode : '-') .'" class="item_kode " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->kode : '-').'</a> ';
+            // })
+            // ->addColumn('barcode', function ($row) {
+            //     return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->barcode : '-') .'" class="item_barcode " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->barcode : '-').'</a> ';
+            // })
+            
+            ->addColumn('xangsuran', function ($row) {
+                return $row->angsuranke .'/'.$row->xangsuran;
             })
-            ->addColumn('kode', function ($row) {
-                return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->kode : '-') .'" class="item_kode " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->kode : '-').'</a> ';
+            ->addColumn('nilaiangsuran', function ($row) {
+                return number_format($row->asli/$row->xangsuran,0);
             })
-            ->addColumn('barcode', function ($row) {
-                return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->barcode : '-') .'" class="item_barcode " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->barcode : '-').'</a> ';
+            ->addColumn('nilaihutang', function ($row) {
+                return number_format($row->asli,0);
+            })
+            ->addColumn('sudahbayar', function ($row) {
+                return number_format($row->asli-$row->pokok,0);
+            })
+            ->addColumn('saldo', function ($row) {
+                return number_format($row->pokok,0);
             })
             
-            ->addColumn('hbs', function ($row) {
-                return $row->idbarang ? number_format($row->barang->hbs,0) : '';
-            })
-            ->addColumn('hjs', function ($row) {
-                return $row->idbarang ? number_format($row->barang->hjs,0) : '';
-            })
-            ->addColumn('satuan', function ($row) {
-                return $row->idbarang ? $row->barang->satuan->kode : '';
-            })
-            ->addColumn('ruang', function ($row) {
-                return $row->idruang ? $row->ruang->ruang : '';
-            })
-            ->addColumn('seksi', function ($row) {
-                return $row->idruang ? $row->ruang->seksi->seksi : '';
-            })
             
-            ->addColumn('action', function ($row) {
-                return '<a href="#" title="Edit Data" class="btn btn-success btn-xs item_edit" data="' . $row->id . '" data2="'. $row->barang->nabara.'" data3="'. $row->barang->kode.'" data4="'. $row->barang->barcode.'"><i style="font-size:18px" class="fa">&#xf044;</i></a> ' .
-                       '<a href="#" title="Hapus Data" class="btn btn-danger btn-xs item_hapus" data="' . $row->id . '" data2="'. $row->barang->nabara.'" data3="'. $row->barang->kode.'" data4="'. $row->barang->barcode.'"><i style="font-size:18px" class="fa">&#xf00d;</i></a>';
-            })
+            // ->addColumn('action', function ($row) {
+            //     return '<a href="#" title="Edit Data" class="btn btn-success btn-xs item_edit" data="' . $row->id . '" data2="'. $row->barang->nabara.'" data3="'. $row->barang->kode.'" data4="'. $row->barang->barcode.'"><i style="font-size:18px" class="fa">&#xf044;</i></a> ' .
+            //            '<a href="#" title="Hapus Data" class="btn btn-danger btn-xs item_hapus" data="' . $row->id . '" data2="'. $row->barang->nabara.'" data3="'. $row->barang->kode.'" data4="'. $row->barang->barcode.'"><i style="font-size:18px" class="fa">&#xf00d;</i></a>';
+            // })
             
             ->rawColumns([
-                'nabara',
-                'kode',
-                'barcode',
-                'hbs',
-                'hjs',
-                'satuan',
-                'ruang',
-                'seksi',
+                'xangsuran',
+                'nilaiangsuran',
+                'nilaihutang',
+                'sudahbayar',
+                'saldo',
                 'action'])
 
             ->make(true);
@@ -1033,7 +1028,7 @@ class BayarhutangController extends Controller
         return json_encode(array('data' => $data));
     }
   
-    function listbarang()
+    function listhutang()
     {
         $tampil = Barang::orderBy('nabara','asc')->get();
         foreach ($tampil as $baris) {
@@ -1176,6 +1171,8 @@ class BayarhutangController extends Controller
         session([
             'tgltransaksi1' => $request['tgltransaksi1'],
             'nomorbukti1' => $request['nomorbukti1'],
+            'idanggota1' => $request['idanggota1'],
+            'saldo1' => $request['saldo1'],
         ]);
         
     }

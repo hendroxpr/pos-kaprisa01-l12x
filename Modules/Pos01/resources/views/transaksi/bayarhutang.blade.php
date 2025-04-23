@@ -7,11 +7,19 @@
     if($tgltransaksi==''){
         $tgltransaksi='';  
     }
-    $nomorbuktia = session()->get('nomorbukti1');
-    if($nomorbuktia==''){
-        $nomorbuktia='';  
+    $nomorbukti = session()->get('nomorbukti1');
+    if($nomorbukti==''){
+        $nomorbukti='';  
     }
-    
+    $idanggota = session()->get('idanggota1');
+    if($idanggota==''){
+        $idanggota='0';  
+    }
+    $saldo = session()->get('saldo1');
+    if($saldo==''){
+        $saldo='0';  
+    }
+
     $jmlitem = session()->get('jmlitem1');
     if($jmlitem=='0'){
         $jmlitem='0';  
@@ -80,7 +88,7 @@
                         <h6 class="mt-2  text-right">Nomor Bukti-a</h6>
                     </div>
                     <div class="col-md-7 input-group">
-                        <input name="nomorbukti1" id="nomorbukti1" class="form-control w3-input w3-border rounded-0" type="search" placeholder="BTH.001.20230131.001" disabled value="{{ $nomorbuktia }}">                        
+                        <input name="nomorbukti1" id="nomorbukti1" class="form-control w3-input w3-border rounded-0" type="search" placeholder="BTH.001.20230131.001" disabled value="{{ $nomorbukti }}">                        
                         <div class="input-group-append">
                           <button id="btn_nomorbukti1" name="btn_nomorbukti1" type="button" style="border-radius:0px; border:none;" title="Generate Nomor Bukti-a" disabled><i style="font-size:24" class="fa">&#xf013;</i></button>
                         </div>
@@ -102,7 +110,7 @@
                         <h6 class="mt-2">Nama</h6>
                     </div>
                     <div class="col-md-7">
-                        <select name="idanggota1" id="idanggota1" style="display: none;"></select> 
+                        <select name="idanggota1" id="idanggota1" style="display: none;" value="{{ $idanggota }}"></select> 
                         <input name="nama1" id="nama1" class="w3-input w3-border" maxlength="200" type="text" placeholder="nama" value="{{ old('nama1') }}"  readonly>                       
                     </div>
                 </div>               
@@ -146,7 +154,7 @@
                         <h6 class="mt-2">Saldo Hutang</h6>
                     </div>
                     <div class="col-md-7">
-                        <input name="saldo1" id="saldo1" class="w3-input w3-border" maxlength="50" type="text" placeholder="Saldo" value="{{ old('saldo1') }}"  readonly>                       
+                        <input name="saldo1" id="saldo1" class="w3-input w3-border" maxlength="50" type="text" placeholder="Saldo" value="{{ $saldo }}"  readonly>                       
                     </div>
                 </div>
                 
@@ -248,10 +256,10 @@
                                 </div>
                                 <div class="col-md-9 input-group">
                                     <input name="barang1" id="barang1" class="form-control w3-input w3-border" type="text" placeholder="Nama Barang" readonly>
-                                    <select  name="idbarang1" id="idbarang1" class=" form-control w3-input w3-border" style="border-radius:0px; border:none; display:none;"></select>
+                                    <select  name="idhutang1" id="idhutang1" class=" form-control w3-input w3-border" style="border-radius:0px; border:none; display:none;"></select>
                                     <div class="input-group-append">
-                                      <button id="btn_caribarang1" name="btn_caribarang1" type="button" style="border-radius:0px; border:none;"><i style="font-size:24" class="fas">&#xf002;</i></button>
-                                      <input name="idbarang1x" id="idbarang1x" type="hidden">
+                                      <button id="btn_carihutang1" name="btn_carihutang1" type="button" style="border-radius:0px; border:none;"><i style="font-size:24" class="fas">&#xf002;</i></button>
+                                      <input name="idhutang1x" id="idhutang1x" type="hidden">
                                     </div>
                                     <input name="cek1" id="cek1" class="" type="hidden">                                
                                     <input name="id1" id="id1" class="" type="hidden"> 
@@ -364,9 +372,9 @@
     </div>  
     <!-- end ModalAdd -->
 
-    <!-- ModalCariBarang modal fade-->
-	<div class="modal fade" id="ModalCariBarang"  data-backdrop="static">
-		<div class="modal-dialog modal-xl">  <!-- modal-(sm, lg, xl) ukuran lebar modal -->
+    <!-- ModalCariHutang modal fade-->
+	<div class="modal fade" id="ModalCariHutang"  data-backdrop="static">
+		<div class="modal-dialog modal-lg">  <!-- modal-(sm, lg, xl) ukuran lebar modal -->
 			<div class="modal-content bg-info w3-animate-zoom">
 				
 				<div class="modal-header">
@@ -381,25 +389,23 @@
 												
 						<div class="row">
 							<div id="reload" class="table-responsive">
-								<table id="barang" class="table table-bordered table-striped table-hover" style="width: 100%">
+								<table id="hutang" class="table table-bordered table-striped table-hover" style="width: 100%">
                                     <thead>
                                         <tr style="align-content: center">
                                             <th style="width:10px;">#</th>
-                                            <th style="width:50px">Kode</th>
-                                            <th style="width:50px">Barcode</th>
-                                            <th style="width:200px">Nama Barang</th>
-                                            <th style="width:20px">Qty</th>
-                                            <th style="width:20px">Satuan</th>
-                                            <th style="width:20px">HBS</th>
-                                            <th style="width:20px">HJS</th>
-                                            <th style="width:50px">Ruang</th>
-                                            <th style="width:100px">Seksi</th>
+                                            <th style="width:50px">Tanggal Transaksi</th>
+                                            <th style="width:50px">Nomor Bukti</th>
+                                            <th style="width:20px">Angs (X)</th>
+                                            <th style="width:20px">Nilai Angsuran</th>
+                                            <th style="width:200px">Nilai Hutang</th>
+                                            <th style="width:20px">Sudah Bayar</th>
+                                            <th style="width:20px">Saldo</th>
                                         </tr>
                                     </thead>
                                     <tfoot id="show_footer">
                                         
                                     </tfoot>
-                                    <tbody id="show_barang">
+                                    <tbody id="show_hutang">
                                     
                                     </tbody>
                                 </table>
@@ -416,7 +422,7 @@
         </div>
         <!-- /.modal-dialog -->
 	</div>
-	<!-- end ModalCariBarang -->
+	<!-- end ModalCariHutang -->
 
     <!-- ModalCariAnggota modal fade-->
 	<div class="modal fade" id="ModalCariAnggota"  data-backdrop="static">
@@ -444,7 +450,7 @@
                                             <th style="width:50px">KTP</th>
                                             <th style="width:200px">Nama</th>
                                             <th style="width:100px">Lembaga</th>
-                                            <th style="width:50px">Telp</th>
+                                            <th style="width:50px">Saldo</th>
                                         </tr>
                                     </thead>
                                     <tfoot id="show_footer">
@@ -739,7 +745,7 @@
         return true;
     }
 
-   var barangDatatable;
+   var hutangDatatable;
    var anggotaDatatable;
 $(document).ready(function(){
 
@@ -855,15 +861,15 @@ $(document).ready(function(){
     document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");    
    }, 1000);
 
-    tampil_listbarang();
+    tampil_listhutang();
     //menampilkan combo barang
-    function tampil_listbarang(){				
+    function tampil_listhutang(){				
         $.ajax({
             type: 'get',
-            url   : '{{route('pos01.transaksi.bkeluar_listbarang')}}',
+            url   : '{{route('pos01.transaksi.bayarhutang_listhutang')}}',
             
             success: function(data){				    
-                $("#idbarang1").html(data);                
+                $("#idhutang1").html(data);                
             }
         })                    
     }
@@ -886,7 +892,7 @@ $(document).ready(function(){
     function tampil_listanggota(){				
         $.ajax({
             type: 'get',
-            url   : '{{route('pos01.transaksi.bkeluar_listanggota')}}',
+            url   : '{{route('pos01.transaksi.bayarhutang_listanggota')}}',
             
             success: function(data){				    
                 $("#idanggota1").html(data);                
@@ -1050,21 +1056,21 @@ $(document).ready(function(){
         modal_posting();        
     });
     
-    $('#btn_caribarang1').on('click',function(){        		
-        $('#ModalCariBarang').modal('show');						
+    $('#btn_carihutang1').on('click',function(){        		
+        $('#ModalCariHutang').modal('show');						
     });
     $('#btn_carianggota1').on('click',function(){        		
         $('#ModalCariAnggota').modal('show');						
     });
     
     setTimeout(() => {
-         barangDatatable = tampil_data_barang();    
+         hutangDatatable = tampil_data_hutang();    
          anggotaDatatable = tampil_data_anggota();    
     }, 1000);
 
-    function tampil_data_barang(){
+    function tampil_data_hutang(){
        let i = 1;	
-       return $('#barang').DataTable({
+       return $('#hutang').DataTable({
            responsive : true,
            retrieve: true,
            autoWidth : true,
@@ -1076,7 +1082,7 @@ $(document).ready(function(){
            ],
            processing: true,
            serverSide: true,
-           ajax   : `{{route('pos01.transaksi.bkeluar_showbarang')}}`,
+           ajax   : `{{route('pos01.transaksi.bayarhutang_showhutang')}}`,
            columns: [
                 // { data: 'no', name:'id', render: function (data, type, row, meta) {
                 //     return meta.row + meta.settings._iDisplayStart + 1;
@@ -1084,33 +1090,31 @@ $(document).ready(function(){
                 {  "data": 'DT_RowIndex',
                    orderable: false, 
                    searchable: false },
-                { data: 'kode', name: 'barang.kode', className: 'dt-center' },
-                { data: 'barcode', name: 'barang.barcode', className: 'dt-center' },
-                { data: 'nabara', name: 'barang.nabara'},
-                { data: 'qty', name: 'qty', className: 'dt-center'},
-                { data: 'satuan', name: 'barang.satuan.satuan'},
-                { data: 'hbs', name: 'barang.hbs', className: 'dt-right' },
-                { data: 'hjs', name: 'barang.hjs', className: 'dt-right' },
-                { data: 'ruang', name: 'ruang.ruang' },
-                { data: 'seksi', name: 'ruang.seksi.seksi' },
+                { data: 'tglstatus', name: 'tglstatus', className: 'dt-center' },
+                { data: 'nomorstatus', name: 'nomorstatus', className: 'dt-center' },
+                { data: 'xangsuran', name: 'xangsuran', className: 'dt-center' },
+                { data: 'nilaiangsuran', name: 'nilaiangsuran', className: 'dt-right' },
+                { data: 'nilaihutang', name: 'nilaihutang', className: 'dt-right' },
+                { data: 'sudahbayar', name: 'sudahbayar', className: 'dt-right' },
+                { data: 'saldo', name: 'saldo', className: 'dt-right' },
                
            ]
        });
     }
 
-    $('#show_barang').on('click','.item_nabara',function(){ 
+    $('#show_hutang').on('click','.item_nabara',function(){ 
         ambilcari(this);        
     });
-    $('#show_barang').on('click','.item_kode',function(){        
+    $('#show_hutang').on('click','.item_kode',function(){        
         ambilcari(this);        
     });
-    $('#show_barang').on('click','.item_barcode',function(){        
+    $('#show_hutang').on('click','.item_barcode',function(){        
         ambilcari(this);        
     });
 
     function ambilcari(t){
         var id1 = $(this).attr('data');
-        var idbarang1 = $(t).attr('data1');
+        var idhutang1 = $(t).attr('data1');
         var kode1 = $(t).attr('data2');
         var barcode1 = $(t).attr('data3');
         var idruang1 = $(t).attr('data6');
@@ -1121,8 +1125,8 @@ $(document).ready(function(){
         var ppnpersen1 = $(t).attr('data9');
         var diskonpersen1 = $(t).attr('data10');
 
-        $('#idbarang1').val(idbarang1);
-        $('#barang1').val($('#idbarang1 option:selected').text());
+        $('#idhutang1').val(idhutang1);
+        $('#barang1').val($('#idhutang1 option:selected').text());
         $('#kode1').val(kode1);
         $('#hbs1').val(hbs1);
         $('#qtycek1').val(qtycek1);
@@ -1154,7 +1158,7 @@ $(document).ready(function(){
 
         }, 100);
 
-        $('#ModalCariBarang').modal('hide');
+        $('#ModalCariHutang').modal('hide');
     }
 
     function tampil_data_anggota(){
@@ -1165,13 +1169,14 @@ $(document).ready(function(){
            autoWidth : true,
            buttons : [ {extend: 'colvis', postfixButtons: [ 'colvisRestore' ] }, {extend:'copy'}, {extend:'csv'}, {extend: 'pdf', orientation: 'portrait', pageSize: 'A4', title:'{{ $caption }}'}, {extend: 'excel', title: '{{ $caption }}'}, {extend:'print', orientation: 'portrait', pageSize: 'A4', title: '{{ $caption }}'}, ],        
            dom: 'lfrtip',
+        //    dom: 'lBfrtip',
            lengthMenu: [
                [ 10, 25, 50, 100, 500, 1000, 5000, -1 ],
                [ '10', '25', '50', '100', '500','1000','5000', 'All' ]
            ],
            processing: true,
            serverSide: true,
-           ajax   : `{{route('pos01.transaksi.bkeluar_showanggota')}}`,
+           ajax   : `{{route('pos01.transaksi.bayarhutang_showanggota')}}`,
            columns: [
                 // { data: 'no', name:'id', render: function (data, type, row, meta) {
                 //     return meta.row + meta.settings._iDisplayStart + 1;
@@ -1184,7 +1189,8 @@ $(document).ready(function(){
                 { data: 'ktp', name: 'ktp', className: 'dt-center' },
                 { data: 'nama', name: 'nama'},
                 { data: 'lembaga', name: 'anggota.lembaga'},
-                { data: 'telp', name: 'telp'},
+                { data: 'saldo', name: 'saldo', className: 'dt-right'},
+            
                
            ]
        });
@@ -1213,13 +1219,16 @@ $(document).ready(function(){
         var ktp1 = aArray[2];
         var nama1 = aArray[3];
         var lembaga1 = aArray[4];
+        var saldo1 = aArray[5];
 
         $('#ecard1').val(ecard1);
         $('#nia1').val(nia1);
         $('#ktp1').val(ktp1);
         $('#nama1').val(nama1);
         $('#lembaga1').val(lembaga1);
+        $('#saldo1').val(formatAngka(saldo1,''));
 
+        $('#cariid1x').val('');
 
         $('#ModalCariAnggota').modal('hide');
     }
@@ -1230,6 +1239,7 @@ $(document).ready(function(){
         $('#ktp1').val('');
         $('#nama1').val('');
         $('#lembaga1').val('');
+        $('#saldo1').val('0');
         if (e.which == 13) {
             var x = $('#cariid1x').val();
             // cariid(x);
@@ -1266,11 +1276,31 @@ $(document).ready(function(){
                 var i;                
                  for(i=0; i<resultData.length; i++){                         
                         $('#idanggota1').val(resultData[i].id);
-                        $('#ecard1').val(resultData[i].ecard);
-                        $('#nia1').val(resultData[i].nia);
-                        $('#ktp1').val(resultData[i].ktp);
-                        $('#nama1').val(resultData[i].nama);
-                        $('#lembaga1').val(resultData[i].lembaga.lembaga); 
+                        // $('#ecard1').val(resultData[i].ecard);
+                        // $('#nia1').val(resultData[i].nia);
+                        // $('#ktp1').val(resultData[i].ktp);
+                        // $('#nama1').val(resultData[i].nama);
+                        // $('#lembaga1').val(resultData[i].lembaga.lembaga);
+                        setTimeout(() => {                            
+                            var a = $('#idanggota1 option:selected').text();
+                            const aArray = a.split("|");
+                            var ecard1 = aArray[0];
+                            var nia1 = aArray[1];
+                            var ktp1 = aArray[2];
+                            var nama1 = aArray[3];
+                            var lembaga1 = aArray[4];
+                            var saldo1 = aArray[5];
+                            $('#ecard1').val(ecard1);
+                            $('#nia1').val(nia1);
+                            $('#ktp1').val(ktp1);
+                            $('#nama1').val(nama1);
+                            $('#lembaga1').val(lembaga1);
+                            $('#saldo1').val(formatAngka(saldo1,''));
+
+                            $('#cariid1x').val('');
+
+                            kirimsyarat();
+                        }, 500); 
                 }
                 
                 if(i=='0'){
@@ -1284,6 +1314,20 @@ $(document).ready(function(){
         });
         
     }
+
+    setTimeout(() => {
+        // var a = {{ $saldo }};
+        // var b = {{ $idanggota }};
+        // var c = $('#saldo1').val();
+        // if(c<>'0'||c<>''){
+        //     $('#cariid1x').val('');
+        // }
+        // setTimeout(() => {
+        //     if(a<>'0'||a<>''){
+        //         // alert(b);
+        //     }
+        // }, 100);
+    }, 10000);
 
     function customer(idx){
         var id1=idx;
@@ -1479,7 +1523,7 @@ $(document).ready(function(){
                tampil_tombol();
                //refresh barang
                setTimeout(() => {
-                    barangDatatable = tampil_data_barang();    
+                    hutangDatatable = tampil_data_hutang();    
                 }, 200);               
            }, 200);        
        }, 200);
@@ -1751,21 +1795,25 @@ $(document).ready(function(){
     
 
     function tampil_dataTable(){        
-        barangDatatable.draw(null, false);               
+        hutangDatatable.draw(null, false);               
     }
 
     function kirimsyarat(){
         var tgltransaksi1=$('#tgltransaksi1').val();
         var nomorbukti1=$('#nomorbukti1').val();
+        var idanggota1=$('#idanggota1').val();
+        var saldo1=$('#saldo1').val();
     
         let formData = new FormData();
             formData.append('tgltransaksi1', tgltransaksi1);
             formData.append('nomorbukti1', nomorbukti1);
+            formData.append('idanggota1', idanggota1);
+            formData.append('saldo1', saldo1);
     
         $.ajax({
             enctype: 'multipart/form-data',
             type   : 'post',
-            url    : '{{route('pos01.transaksi.bkeluar_kirimsyarat')}}',
+            url    : '{{route('pos01.transaksi.bayarhutang_kirimsyarat')}}',
             data: formData,
             cache: false,
             processData: false,
@@ -1842,14 +1890,18 @@ $(document).ready(function(){
         }else{
             swalnomorbuktisalah(x);
         }
+
+        if ($('#saldo1').val()=='0'||$('#saldo1').val()==''){
+
+        }
     }); 
     
     function data_simpan(){
-        var judul = $('#idbarang1 option:selected').text();
+        var judul = $('#idhutang1 option:selected').text();
         var id1=$('#id1').val();			
         var tgltransaksi1=$('#tgltransaksi1').val();
         var nomorbukti1=$('#nomorbukti1').val();
-        var idbarang1=$('#idbarang1').val();
+        var idhutang1=$('#idhutang1').val();
         var idanggota1=$('#idanggota1').val();
         var idruang1=$('#idruang1').val();
         var hbs1=$('#hbs1').val();
@@ -1868,7 +1920,7 @@ $(document).ready(function(){
             formData.append('id1', id1);
             formData.append('tgltransaksi1', tgltransaksi1);
             formData.append('nomorbukti1', nomorbukti1);
-            formData.append('idbarang1', idbarang1);
+            formData.append('idhutang1', idhutang1);
             formData.append('idanggota1', idanggota1);
             formData.append('idruang1', idruang1);
             formData.append('hbs1', hbs1);
@@ -2011,8 +2063,8 @@ $(document).ready(function(){
                     var resultData = data.data;	                			
                     for(i=0; i<resultData.length; i++){
                         jumlahx = parseFloat(resultData[i].hpp)+parseFloat(resultData[i].ppn)-parseFloat(resultData[i].diskon);
-                        $('#idbarang1').val(resultData[i].idbarang);
-                        $('#barang1').val($('#idbarang1 option:selected').text());
+                        $('#idhutang1').val(resultData[i].idbarang);
+                        $('#barang1').val($('#idhutang1 option:selected').text());
                         $('#kode1').val(resultData[i].barang.kode);
                         $('#barcode1').val(resultData[i].barang.barcode);
                         $('#idruang1').val(resultData[i].idruang);
@@ -2592,6 +2644,15 @@ $(document).ready(function(){
         
     }
 
+    function swalgagalposting(x){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...failed to posting record',
+            text: x,
+            timer:1000
+        })
+    }
+    
     function swalproses(x){
         Swal.fire({
             icon: 'success',

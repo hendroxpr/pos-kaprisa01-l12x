@@ -2104,7 +2104,7 @@ $(document).ready(function(){
         var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
         var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;  
-        if(kembalix>'0'){
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2136,7 +2136,7 @@ $(document).ready(function(){
         var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
         var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1; 
-        if(kembalix>'0'){
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2170,7 +2170,7 @@ $(document).ready(function(){
         var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
         var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2204,7 +2204,7 @@ $(document).ready(function(){
         var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
         var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2246,7 +2246,7 @@ $(document).ready(function(){
 
 
         var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2284,7 +2284,7 @@ $(document).ready(function(){
             $("#ambilsavings1").val(saldo1);
         }
         var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
