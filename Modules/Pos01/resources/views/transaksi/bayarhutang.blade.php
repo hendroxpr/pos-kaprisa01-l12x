@@ -85,7 +85,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <h6 class="mt-2  text-right">Nomor Bukti-a</h6>
+                        <h6 class="mt-2  text-right">Nomor Bukti</h6>
                     </div>
                     <div class="col-md-7 input-group">
                         <input name="nomorbukti1" id="nomorbukti1" class="form-control w3-input w3-border rounded-0" type="search" placeholder="BTH.001.20230131.001" disabled value="{{ $nomorbukti }}">                        
@@ -191,16 +191,13 @@
                     <thead>
                         <tr>
                             <th style="width:10px;">#</th>                            
-							<th style="width:50px">Kode</th>
-							<th style="width:50px">Barcode</th>
-							<th style="width:200px">Nama Barang</th>														
-							<th style="width:50px">Ruang</th>														
-							<th style="width:50px">Qty</th>
-							<th style="width:50px">HJS</th>
-							<th style="width:50px">HPPJ</th>
-							<th style="width:50px">PPN</th>
-							<th style="width:50px">Diskon</th>
-							<th style="width:50px">Jumlah</th>
+							<th style="width:50px">Nomor Hutang</th>
+							<th style="width:50px">Tgl.Hutang</th>
+							<th style="width:50px">Nilai Hutang</th>														
+							<th style="width:50px">Sudah Bayar</th>														
+							<th style="width:50px">Bayar</th>
+							<th style="width:50px">Saldo</th>
+							<th style="width:50px">Angs.ke</th>
 							<th style="width:50px">Tgl.Posting</th>
 							<th style="width:50px">No.Posting</th>
 							<th style="width:100px">Keterangan</th>							
@@ -217,14 +214,11 @@
                             <td></td>
                             <td style="text-align: center"><b>TOTAL :</b></td>														
                             <td></td>														
+                            <td style="text-align: right"><b><span id='totalsaldo1' name='totalsaldo1'></span></b></td>
+                            <td></td>                            
                             <td></td>
                             <td></td>
-                            <td style="text-align: right"><b><span id='totalhpp1' name='totalhpp1'></span></b></td>
-                            <td style="text-align: right"><b><span id='totalppn1' name='totalppn1'></span></b></td>
-                            <td style="text-align: right"><b><span id='totaldiskon1' name='totaldiskon1'></span></b></td>
-                            <td style="text-align: right"><b><span id='totaljumlah1' name='totaljumlah1'></span></b></td>
-                            <td></td>
-                            <td></td>
+                            <td></td>							
                             <td></td>							
                             <td></td>
                         </tr>
@@ -237,11 +231,11 @@
 
     <!-- ModalAdd modal fade-->
     <div class="modal fade" id="ModalAdd" data-backdrop="static">
-        <div class="modal-dialog modal-default">  <!-- modal-(sm, lg, xl) ukuran lebar modal -->
+        <div class="modal-dialog" style="width: 400px;">  <!-- modal-(sm, lg, xl) ukuran lebar modal -->
             <div id="modalx" nama="modalx"  class="modal-content bg-primary w3-animate-zoom">
             
                 <div class="modal-header">
-                <h3 class="modal-title"><i id="iconx" name="iconx" class="fas fa-plus-square"></i><b><span id="judulx" name="judulx">Tambah Data</span></b></h3>
+                <h3 class="modal-title"><i id="iconx" name="iconx" class="fas fa-plus-square"></i><b><span id="judulx" name="judulx"> Tambah Data</span></b></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
                 </div>
@@ -251,108 +245,74 @@
                         <div class="modal-body" id="bodyAdd" name="bodyAdd">                        
 
                             <div class="row">
-                                <div class="col-md-3" align="right">									
-                                    <h6 class="mt-2">Nama Barang</h6>
+                                <div class="col-md-4" align="right">									
+                                    <h6 class="mt-2">Nomor Hutang</h6>
                                 </div>
-                                <div class="col-md-9 input-group">
-                                    <input name="barang1" id="barang1" class="form-control w3-input w3-border" type="text" placeholder="Nama Barang" readonly>
-                                    <select  name="idhutang1" id="idhutang1" class=" form-control w3-input w3-border" style="border-radius:0px; border:none; display:none;"></select>
+                                <div class="col-md-8 input-group">
+                                    <select  name="idhutang1" id="idhutang1" class=" form-control w3-input w3-border" style="border-radius:0px; border:none; display:block;"></select>
                                     <div class="input-group-append">
                                       <button id="btn_carihutang1" name="btn_carihutang1" type="button" style="border-radius:0px; border:none;"><i style="font-size:24" class="fas">&#xf002;</i></button>
-                                      <input name="idhutang1x" id="idhutang1x" type="hidden">
                                     </div>
+                                    <select  name="idhutangx1" id="idhutangx1" class="" style="border-radius:0px; border:none; display:none;"></select>
                                     <input name="cek1" id="cek1" class="" type="hidden">                                
                                     <input name="id1" id="id1" class="" type="hidden"> 
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">Kode</h6>
+                                <div class="col-md-4 mt-1" align="right">									
+                                    <h6 class="mt-2">Tgl.Hutang</h6>
                                 </div>
-                                <div class="col-md-9">                                
-                                    <input name="kode1" id="kode1" class="w3-input w3-border" type="text" placeholder="kode" readonly>
+                                <div class="col-md-8">                                
+                                    <input name="tglhutang1" id="tglhutang1" class="w3-input w3-border" type="text" placeholder="tgl hutang" readonly>
+                                </div>								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mt-1" align="right">									
+                                    <h6 class="mt-2">Nilai Hutang</h6>
+                                </div>
+                                <div class="col-md-8">                                
+                                    <input name="nilaihutang1" id="nilaihutang1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('nilaihutang1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                </div>								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mt-1" align="right">									
+                                    <h6 class="mt-2">Sudah Bayar</h6>
+                                </div>
+                                <div class="col-md-8">                                
+                                    <input name="sudahbayar1" id="sudahbayar1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('sudahbayar1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                </div>								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mt-1" align="right">									
+                                    <h6 class="mt-2">Saldo Hutang</h6>
+                                </div>
+                                <div class="col-md-8">                                
+                                    <input name="saldohutang1" id="saldohutang1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('saldohutang1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                </div>								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mt-1" align="right">									
+                                    <h6 class="mt-2">Bayar</h6>
+                                </div>
+                                <div class="col-md-8">                                
+                                    <input name="bayar1" id="bayar1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="" value="{{ old('bayar1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
+                                </div>								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mt-1" align="right">									
+                                    <h6 class="mt-2">Sisa Saldo</h6>
+                                </div>
+                                <div class="col-md-8">                                
+                                    <input name="sisasaldo1" id="sisasaldo1" class="w3-input w3-border text-right" type="search" placeholder="" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
                                 </div>								  
                             </div>
 
                             <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">Barcode</h6>
-                                </div>
-                                <div class="col-md-9">                                
-                                    <input name="barcode1" id="barcode1" class="w3-input w3-border" type="text" placeholder="barcode" readonly>
-                                </div>								  
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">Ruang</h6>
-                                </div>
-                                <div class="col-md-9"> 
-                                    <select name="idruang1" id="idruang1" style="display: none;"></select>                               
-                                    <input name="ruang1" id="ruang1" class="w3-input w3-border" type="text" placeholder="ruang" readonly>
-                                </div>								  
-                            </div>
-                             
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">Qty</h6>
-                                </div>
-                                <div class="col-md-9">
-                                    <input name="qtycek1" id="qtycek1" class="" type="hidden">                                
-                                    <input name="qty1" id="qty1" class="w3-input w3-border text-right" type="search" placeholder="qty" value="1"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
-                                </div>								  
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">HJS</h6>
-                                </div>
-                                <div class="col-md-9"> 
-                                    <input name="hbs1" id="hbs1" class="" type="hidden">  
-                                    <input name="hjs1" id="hjs1" class="w3-input w3-border text-right" type="search" placeholder="Harga Jual Satuan" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">                             
-                                </div>								  
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">
-                                    <h6 class="mt-2">HPPJ</h6>
-                                </div>
-                                <div class="col-md-9">
-                                    <input name="hpp1" id="hpp1" class="" type="hidden">
-                                    <input name="hppj1" id="hppj1" class="w3-input w3-border" type="search" placeholder="Harga Pokok Penjualan" style="text-align: right" value="0" readonly>
-                                </div>								  
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">PPN</h6>
-                                </div>
-                                <div class="col-md-9">
-                                    <input name="ppn1" id="ppn1" class="w3-input w3-border text-right" type="search" placeholder="PPN" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
-                                    <input name="ppnpersen1" id="ppnpersen1" class="" type="hidden" value="0">                                
-                                </div>								  
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">Diskon</h6>
-                                </div>
-                                <div class="col-md-9">                                
-                                    <input name="diskonpersen1" id="diskonpersen1" class="" type="hidden" value="0">
-                                    <input name="diskon1" id="diskon1" class="w3-input w3-border text-right" type="search" placeholder="Diskon" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
-                                </div>								  
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 mt-1" align="right">									
-                                    <h6 class="mt-2">Jumlah</h6>
-                                </div>
-                                <div class="col-md-9">                                
-                                    <input name="jumlah1" id="jumlah1" class="w3-input w3-border" type="search" placeholder="Jumlah" style="text-align: right" value="0" readonly>
-                                </div>								  
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-3" align="right">										
+                                <div class="col-md-4" align="right">										
                                     <h6 class="mt-2">Keterangan</h6>
                                 </div>
-                                <div class="col-md-9">                                
+                                <div class="col-md-8">                                
                                     <input name="keterangan1" id="keterangan1" class="w3-input w3-border" type="search" maxlength="100" placeholder="Keterangan" value="{{ old('keterangan1') }}">
                                 </div>								  
                             </div>
@@ -393,8 +353,8 @@
                                     <thead>
                                         <tr style="align-content: center">
                                             <th style="width:10px;">#</th>
-                                            <th style="width:50px">Tanggal Transaksi</th>
-                                            <th style="width:50px">Nomor Bukti</th>
+                                            <th style="width:50px">Tanggal Hutang</th>
+                                            <th style="width:50px">Nomor Hutang</th>
                                             <th style="width:20px">Angs (X)</th>
                                             <th style="width:20px">Nilai Angsuran</th>
                                             <th style="width:200px">Nilai Hutang</th>
@@ -481,7 +441,7 @@
         <div class="modal-content bg-warning w3-animate-zoom">
             
             <div class="modal-header">
-                    <h3 class="modal-title"><i style="font-size:18" class="fa">&#xf093;</i><b> Posting Barang Masuk</b></h3>
+                    <h3 class="modal-title"><i style="font-size:18" class="fa">&#xf093;</i><b> Posting Bayar Hutang</b></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
                     
@@ -503,13 +463,13 @@
                         </div> 			
                         <div class="row">
                             <div class="col-md-5" align="right" style="padding-right: 0px; padding-left: 0px;">										
-                                <h4 class="mt-2">Nomor Bukti-a</h4>
+                                <h4 class="mt-2">Nomor Bukti</h4>
                             </div>
                             <div class="col-md-1" align="center">                                
                                 <h4 class="mt-2">:</h4>
                             </div>								  
                             <div class="col-md-6" style="padding-right: 0px; padding-left: 0px;">                                
-                                <h4 class="mt-2"><span  id="nomorbuktia5" name="nomorbuktia5"></span></h4>
+                                <h4 class="mt-2"><span  id="nomorbukti5" name="nomorbukti5"></span></h4>
                             </div>								  
                         </div> 			
                          			
@@ -546,17 +506,7 @@
                                 <h4 class="mt-2"><span  id="jmlitem5" name="jmlitem5"></span></h4>                                                                
                             </div>								  
                         </div>
-                        <div class="row">
-                            <div class="col-md-5" align="right" style="padding-right: 0px; padding-left: 0px;">										
-                                <h4 class="mt-2">Jumlah Barang</h4>
-                            </div>
-                            <div class="col-md-1" align="center">                                
-                                <h4 class="mt-2">:</h4>
-                            </div>								  
-                            <div class="col-md-6" style="padding-right: 0px; padding-left: 0px;">
-                                <h4 class="mt-2"><span  id="jmlbarang5" name="jmlbarang5"></span></h4>
-                            </div>								  
-                        </div>  			
+                         			
                         <div class="row">
                             <div class="col-md-5" align="right" style="padding-right: 0px; padding-left: 0px;">										
                                 <h4 class="mt-2">Total Nilai</h4>
@@ -572,7 +522,7 @@
                 </div>
                 <div class="modal-footer justify-content-between" align="right">
                     <button type="button" class="w3-button w3-border w3-border-white" data-dismiss="modal">Tutup</button>
-                    <button id="btn_posting" name="btn_posting" type="button" class="w3-button w3-border w3-border-white"><i style="font-size:18px" class="fa">&#xf093;</i> Posting</button>
+                    <button id="btn_posting5" name="btn_posting5" type="button" class="w3-button w3-border w3-border-white"><i style="font-size:18px" class="fa">&#xf093;</i> Posting</button>
                 </div>
             </form>
         </div>
@@ -702,7 +652,7 @@
                                     <h4 class="mt-2" name="judulnilaihutang1" id="judulnilaihutang1">Nilai Hutang</h4>
                                 </div>                                								  
                                 <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
-                                    <input name="nilaihutang1" id="nilaihutang1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="nilai hutang" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
+                                    {{-- <input name="nilaihutang1" id="nilaihutang1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="nilai hutang" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"> --}}
                                 </div>								  
                             </div>  
                             
@@ -857,12 +807,12 @@ $(document).ready(function(){
     document.getElementById('judulkali1').setAttribute("hidden","hidden");    
     document.getElementById('persenjasa1').setAttribute("hidden","hidden");
     document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");    
-    document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
+    // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
     document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");    
    }, 1000);
 
-    tampil_listhutang();
-    //menampilkan combo barang
+    
+    //menampilkan combo hutang
     function tampil_listhutang(){				
         $.ajax({
             type: 'get',
@@ -873,16 +823,14 @@ $(document).ready(function(){
             }
         })                    
     }
-
-    tampil_listruang();
-    //menampilkan combo ruang
-    function tampil_listruang(){				
+    //menampilkan combo hutangx
+    function tampil_listhutangx(){				
         $.ajax({
             type: 'get',
-            url   : '{{route('pos01.transaksi.bkeluar_listruang')}}',
+            url   : '{{route('pos01.transaksi.bayarhutang_listhutangx')}}',
             
             success: function(data){				    
-                $("#idruang1").html(data);                
+                $("#idhutangx1").html(data);                
             }
         })                    
     }
@@ -924,49 +872,38 @@ $(document).ready(function(){
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');   
      }
      
-    
-    //tampilkan dalam tabel ->OK
+     //tampilkan dalam tabel ->OK
     function tampil_data(){	
-        
         $.ajax({
             type  : 'get',
-            url   : `{{route('pos01.transaksi.bkeluar_show')}}`,
+            url   : '{{route('pos01.transaksi.bayarhutang_show')}}',
             async : false,
             dataType : 'json',
-                                             
+            				 				
             success : function(data){
                 var nomorpostingx;
                 var idanggotax;
-                var jumlahy;
-                var hppjx = 0;
                 var tglposting;
-                var qtyx = 0;
-                var ppnx = 0;
-                var diskonx = 0;
+                var sudahbayarx;
                 var jumlahx = 0;
                 var html = '';
                 var aksi;
-                var i;                
-                var resultData = data.data;	   
-                console.log(resultData);
+                var i;                                
+                var resultData = data.data;	                			
                 for(i=0; i<resultData.length; i++){
                     nomorpostingx = resultData[i].nomorposting;
                     idanggotax = resultData[i].idanggota;
-                    qtyx = parseInt(qtyx) + parseInt(resultData[i].qty);
-                    hppjx = parseInt(hppjx) + parseInt(resultData[i].hppj);
-                    ppnx = parseInt(ppnx) + parseInt(resultData[i].ppn);
-                    diskonx = parseInt(diskonx) + parseInt(resultData[i].diskon);
-                    jumlahy = parseInt(resultData[i].hppj)+parseInt(resultData[i].ppn)-parseInt(resultData[i].diskon); 
-                    jumlahx = parseInt(jumlahx) + parseInt(jumlahy);
+                     
+                    jumlahx = jumlahx + parseFloat(resultData[i].bayar);
 
                     tglposting = (resultData[i].nomorposting ? resultData[i].nomorposting : '').length;
-                    
+
                     if(tglposting=='0'){
                         html += '<tr>';
                         aksi = '<td style="text-align:center;">' +
-                                    '<a href="javascript:;" title="Edit Data"  class="btn btn-success btn-xs item_edit" data="'+resultData[i].id+'" data2="'+resultData[i].barang.kode+'" data3="'+resultData[i].barang.nabara+'" data4="'+resultData[i].keterangan+'"><i style="font-size:18px;" class="fa" >&#xf044;</i></a>'+ ' ' +
+                                    '<a href="javascript:;" title="Edit Data"  class="btn btn-success btn-xs item_edit" data="'+resultData[i].id+'" data2="'+resultData[i].hutang.nomorstatus+'" data3="'+resultData[i].hutang.tglstatus+'" data4="'+resultData[i].keterangan+'"><i style="font-size:18px;" class="fa" >&#xf044;</i></a>'+ ' ' +
                                     '<a href="javascript:;" title="Hapus Data"  class="btn btn-danger btn-xs item_hapus" ' +
-                                        'data="'+resultData[i].id+'" data2="'+resultData[i].barang.kode+'" data3="'+resultData[i].barang.nabara+'" data4="'+resultData[i].keterangan+'" ' +
+                                        'data="'+resultData[i].id+'" data2="'+resultData[i].hutang.nomorstatus+'" data3="'+resultData[i].hutang.tglstatus+'" data4="'+resultData[i].keterangan+'" ' +
                                         '><i style="font-size:18px" class="fa">&#xf00d;</i></a>' +   
                                 '</td>';
                         $('#btn_tambah1').removeAttr('disabled');
@@ -975,50 +912,38 @@ $(document).ready(function(){
                     }else{
                         html += '<tr style="background:goldenrod">';
                         aksi = '<td style="text-align:center;">' +
-                                '<a href="javascript:;" title="Edit Data"  class="btn btn-success btn-xs item_edit  disabled" data="'+resultData[i].id+'" data2="'+resultData[i].barang.kode+'" data3="'+resultData[i].barang.nabara+'" data4="'+resultData[i].keterangan+'"><i style="font-size:18px;" class="fa">&#xf044;</i></a>'+ ' ' +
-                                '<a href="javascript:;" title="Hapus Data"  class="btn btn-danger btn-xs item_hapus  disabled" ' +
-                                    'data="'+resultData[i].id+'" data2="'+resultData[i].barang.kode+'" data3="'+resultData[i].barang.nabara+'" data4="'+resultData[i].keterangan+'" ' +
-                                    '><i style="font-size:18px" class="fa">&#xf00d;</i></a>' +   
-                            '</td>';
+                                '<a href="javascript:;" title="Edit Data"  class="btn btn-success btn-xs item_edit" data="'+resultData[i].id+'" data2="'+resultData[i].hutang.nomorstatus+'" data3="'+resultData[i].hutang.tglstatus+'" data4="'+resultData[i].keterangan+'"><i style="font-size:18px;" class="fa" >&#xf044;</i></a>'+ ' ' +
+                                    '<a href="javascript:;" title="Hapus Data"  class="btn btn-danger btn-xs item_hapus" ' +
+                                        'data="'+resultData[i].id+'" data2="'+resultData[i].hutang.nomorstatus+'" data3="'+resultData[i].hutang.tglstatus+'" data4="'+resultData[i].keterangan+'" ' +
+                                        '><i style="font-size:18px" class="fa">&#xf00d;</i></a>' +   
+                                '</td>';
                         $('#btn_tambah1').attr('disabled', '');
                         $('#btn_posting1').attr('disabled', '');                                                        
                     }
 
                     html += 
                                 '<td align="center">'+ (i+1) +'</td>'+                            								
-                                '<td>'+resultData[i].barang.kode+'</td>'+
-                                '<td>'+resultData[i].barang.barcode+'</td>'+
-                                '<td>'+resultData[i].barang.nabara+'</td>'+
-                                '<td>'+resultData[i].ruang.ruang+'</td>'+
-                                '<td align="center">'+formatAngka(resultData[i].qty,'')+'</td>'+
-                                '<td align="right">'+formatAngka(resultData[i].hjs,'')+'</td>'+
-                                '<td align="right">'+formatAngka(resultData[i].hppj,'')+'</td>'+
-                                '<td align="right">'+formatAngka(resultData[i].ppn,'')+'</td>'+
-                                '<td align="right">'+formatAngka(resultData[i].diskon,'')+'</td>'+
-                                '<td align="right">'+formatAngka(jumlahy,'')+'</td>'+
+                                '<td>'+resultData[i].hutang.nomorstatus+'</td>'+
+                                '<td>'+resultData[i].hutang.tglstatus+'</td>'+
+                                '<td align="right">'+ formatAngka(resultData[i].hutang.asli)+'</td>'+
+                                '<td align="right">'+ formatAngka(resultData[i].hutang.asli - resultData[i].bayar - resultData[i].akhir)+'</td>'+
+                                '<td align="right">'+ formatAngka(resultData[i].bayar)+'</td>'+
+                                '<td align="right">'+ formatAngka(resultData[i].akhir)+'</td>'+
+                                '<td align="center">'+ resultData[i].angsuranke +'</td>'+
                                 '<td>'+(resultData[i].tglposting ? resultData[i].tglposting : '')+'</td>'+
                                 '<td>'+(resultData[i].nomorposting ? resultData[i].nomorposting : '')+'</td>'+
                                 '<td>'+(resultData[i].keterangan ? resultData[i].keterangan : '')+'</td>'+
                                 aksi +
                             '</tr>';
 
-                        $('#nomorpostingnya1').val(resultData[i].nomorposting);            
-                        $('#tglpostingnya1').val(resultData[i].tglposting);            
-                    
                 }
-                
+
                 $('#show_data').html(html); 
                 $('#jmlitem5').text(i);                            
-                $('#jmlbarang5').text(qtyx);
-                $('#totalhpp1').text(formatAngka(hppjx,''));
-                $('#totalppn1').text(formatAngka(ppnx,''));
-                $('#totaldiskon1').text(formatAngka(diskonx,''));
-                $('#totaljumlah1').text(formatAngka(jumlahx,''));
+                $('#totalsaldo1').text(formatAngka(jumlahx,''));
                 $('#totalnilai5').text(formatAngka(jumlahx,''));
-                $('#displaysubtotal1').text($('#totaljumlah1').text());
-                $('#subtotals1').val(formatAngka(hppjx,''));
-                $('#ppns1').val(formatAngka(ppnx,''));
-                $('#diskons1').val(formatAngka(diskonx,''));
+                $('#displaysubtotal1').text($('#totalsaldo1').text());
+
                 $('#totals1').val(formatAngka(jumlahx,''));
                 if(i=='0'){
                     $('#btn_tambah1').removeAttr('disabled');
@@ -1033,11 +958,11 @@ $(document).ready(function(){
                         customer(idanggotax);
                     }, 100);
                     
-                }                            
+                }   
+                                            
             }
-
-    
         }); 
+    
     }
 
     $('#btn_posting1').on('click',function(){
@@ -1045,14 +970,13 @@ $(document).ready(function(){
             nomorposting();
             setTimeout(() => {
                 $('#tgltransaksi5').text($('#tgltransaksi1').val());        		
-                $('#nomorbuktia5').text($('#nomorbukti1').val());        		
+                $('#nomorbukti5').text($('#nomorbukti1').val());        		
                 $('#ModalPosting').modal('show');						                
             }, 10);
         }, 200);
-        
     });
     
-    $('#btn_posting').on('click',function(){
+    $('#btn_posting5').on('click',function(){
         modal_posting();        
     });
     
@@ -1102,62 +1026,18 @@ $(document).ready(function(){
        });
     }
 
-    $('#show_hutang').on('click','.item_nabara',function(){ 
+    $('#show_hutang').on('click','.item_nomorstatus',function(){ 
         ambilcari(this);        
     });
-    $('#show_hutang').on('click','.item_kode',function(){        
+    $('#show_hutang').on('click','.item_tglstatus',function(){        
         ambilcari(this);        
     });
-    $('#show_hutang').on('click','.item_barcode',function(){        
-        ambilcari(this);        
-    });
-
+    
     function ambilcari(t){
         var id1 = $(this).attr('data');
         var idhutang1 = $(t).attr('data1');
-        var kode1 = $(t).attr('data2');
-        var barcode1 = $(t).attr('data3');
-        var idruang1 = $(t).attr('data6');
-        var hbs1 = $(t).attr('data4');
-        var hjs1 = $(t).attr('data5');
-        var qtycek1 = $(t).attr('data11');
-        var qty1 = $('#qty1').val();
-        var ppnpersen1 = $(t).attr('data9');
-        var diskonpersen1 = $(t).attr('data10');
-
         $('#idhutang1').val(idhutang1);
-        $('#barang1').val($('#idhutang1 option:selected').text());
-        $('#kode1').val(kode1);
-        $('#hbs1').val(hbs1);
-        $('#qtycek1').val(qtycek1);
-        $('#hjs1').val(formatAngka(hjs1,''));
-        $('#barcode1').val(barcode1);
-        $('#idruang1').val(idruang1);
-        $('#ruang1').val($('#idruang1 option:selected').text());
-        $('#ppnpersen1').val(ppnpersen1);
-        $('#diskonpersen1').val(diskonpersen1);
-
-        setTimeout(() => {
-            var hbsx = parseFloat(hbs1);
-            var qtyx = parseFloat(qty1.replace(/[^,\d]/g, '').toString());
-            var hjsx = parseFloat(hjs1.replace(/[^,\d]/g, '').toString());
-            var ppnpersenx = parseFloat(ppnpersen1);
-            var diskonpersenx = parseFloat(diskonpersen1);
-            var hppx = qtyx * hbsx; 
-            $('#hpp1').val(hppx);
-
-            var hppjx = qtyx * hjsx;
-            $('#hppj1').val(formatAngka(hppjx,''));
-            var ppnx = Math.round(hppjx * ppnpersenx / 100);
-            var diskonx = Math.round(hppjx * diskonpersenx / 100);
-            var jumlahx = hppjx + ppnx - diskonx;
-            $('#ppn1').val(formatAngka(ppnx,''));
-            $('#diskon1').val(formatAngka(diskonx,''));
-            $('#jumlah1').val(formatAngka(jumlahx,''));
-
-
-        }, 100);
-
+        displayhutang(idhutang1);
         $('#ModalCariHutang').modal('hide');
     }
 
@@ -1231,6 +1111,9 @@ $(document).ready(function(){
         $('#cariid1x').val('');
 
         $('#ModalCariAnggota').modal('hide');
+        setTimeout(() => {
+            kirimsyarat();
+        }, 1000);
     }
 
     $('#cariid1x').keypress(function (e) {        
@@ -1298,8 +1181,17 @@ $(document).ready(function(){
                             $('#saldo1').val(formatAngka(saldo1,''));
 
                             $('#cariid1x').val('');
-
                             kirimsyarat();
+
+                            setTimeout(() => {
+                                hutangDatatable = tampil_data_hutang(); 
+                                setTimeout(() => {
+                                    hutangDatatable.ajax.url('{{route('pos01.transaksi.bayarhutang_showhutang')}}').load();                
+                                    hutangDatatable.draw(null, false);
+                                                                        
+                                }, 500);           
+                            }, 500);
+
                         }, 500); 
                 }
                 
@@ -1395,7 +1287,7 @@ $(document).ready(function(){
                                 document.getElementById('judulkali1').removeAttribute("hidden");
                                 document.getElementById('persenjasa1').removeAttribute("hidden");
                                 document.getElementById('judulpersenjasa1').removeAttribute("hidden");
-                                document.getElementById('nilaihutang1').removeAttribute("hidden");
+                                // document.getElementById('nilaihutang1').removeAttribute("hidden");
                                 document.getElementById('judulnilaihutang1').removeAttribute("hidden");
                             }else{
                                
@@ -1403,7 +1295,7 @@ $(document).ready(function(){
                                 document.getElementById('judulkali1').setAttribute("hidden","hidden");
                                 document.getElementById('persenjasa1').setAttribute("hidden","hidden");
                                 document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");
-                                document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
+                                // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
                                 document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");
                             }
                             
@@ -1523,264 +1415,17 @@ $(document).ready(function(){
                tampil_tombol();
                //refresh barang
                setTimeout(() => {
-                    hutangDatatable = tampil_data_hutang();    
+                    hutangDatatable = tampil_data_hutang();
+                    setTimeout(() => {
+                        hutangDatatable.ajax.url('{{route('pos01.transaksi.bayarhutang_showhutang')}}').load();                
+                        hutangDatatable.draw(null, false);                         
+                    }, 200);    
                 }, 200);               
            }, 200);        
        }, 200);
     });
     
-    $("#qty1").on('change',function(){ 
-        var qtycek = parseFloat($("#qtycek1").val());
-        var qty = parseFloat($("#qty1").val());
-
-        if(qty>=qtycek){
-            var mak = qtycek;
-            $("#qty1").val(mak);
-        }
-
-        setTimeout(() => {
-            var j1 = $("#qty1").val().replace(/[^,\d]/g, '').toString();
-            var k1 = $("#hjs1").val().replace(/[^,\d]/g, '').toString();  
-            var j2 = $("#qty1").val().length;
-            var k2 = $("#hjs1").val().length;
-            if($("#qty1").val()=='0'||$("#qty1").val()==''){
-                $("#hpp1").val('0');
-            }else{
-               
-                var qtyx = parseFloat($("#qty1").val());
-                var hbsx = parseFloat($("#hbs1").val());
-                $("#hpp1").val(qtyx*hbsx);
-            }
-
-            if(j2=='0'||k2=='0'){
-                
-                if(j2=='0'){
-                    $("#qty1").val('0');
-                }
-                
-                $("#hppj1").val('0');
-                $("#ppn1").val('0');
-                $("#diskon1").val('0');
-                $("#jumlah1").val('0');
-            }else{
-                var j3 = parseFloat(j1); 
-                var k3 = parseFloat(k1); 
-                var l3 = formatAngka(j3*k3,'');
-                $("#hppj1").val(l3);
-                var ppnpersenx = parseFloat($("#ppnpersen1").val());
-                var diskonpersenx = parseFloat($("#diskonpersen1").val());
-                var ppnx = Math.round(j3 * k3 * ppnpersenx / 100);
-                var diskonx = Math.round(j3 * k3 * diskonpersenx / 100);
-                var jumlahx = (j3 * k3) + ppnx - diskonx;
-                $("#ppn1").val(formatAngka(ppnx,''));
-                $("#diskon1").val(formatAngka(diskonx,''));
-                $("#jumlah1").val(formatAngka(jumlahx,''));
-
-            }
-
-        }, 500);
-
-        if(j1==''||j2=='0'){
-            document.getElementById("btn_simpan").disabled = true;
-        }else{
-            document.getElementById("btn_simpan").disabled = false;
-        }
-    });
-    $("#qty1").on('keyup',function(){ 
-        var qtycek = parseFloat($("#qtycek1").val());
-        var qty = parseFloat($("#qty1").val());
-
-        if(qty>=qtycek){
-            var mak = qtycek;
-            $("#qty1").val(mak);
-        }
-
-        setTimeout(() => {
-            var j1 = $("#qty1").val().replace(/[^,\d]/g, '').toString();
-            var k1 = $("#hjs1").val().replace(/[^,\d]/g, '').toString();  
-            var j2 = $("#qty1").val().length;
-            var k2 = $("#hjs1").val().length;
-            if($("#qty1").val()=='0'||$("#qty1").val()==''){
-                $("#hpp1").val('0');
-            }else{
-               
-                var qtyx = parseFloat($("#qty1").val());
-                var hbsx = parseFloat($("#hbs1").val());
-                $("#hpp1").val(qtyx*hbsx);
-            }
-
-            if(j2=='0'||k2=='0'){
-                
-                if(j2=='0'){
-                    $("#qty1").val('0');
-                }
-                
-                $("#hppj1").val('0');
-                $("#ppn1").val('0');
-                $("#diskon1").val('0');
-                $("#jumlah1").val('0');
-            }else{
-                var j3 = parseFloat(j1); 
-                var k3 = parseFloat(k1); 
-                var l3 = formatAngka(j3*k3,'');
-                $("#hppj1").val(l3);
-                var ppnpersenx = parseFloat($("#ppnpersen1").val());
-                var diskonpersenx = parseFloat($("#diskonpersen1").val());
-                var ppnx = Math.round(j3 * k3 * ppnpersenx / 100);
-                var diskonx = Math.round(j3 * k3 * diskonpersenx / 100);
-                var jumlahx = (j3 * k3) + ppnx - diskonx;
-                $("#ppn1").val(formatAngka(ppnx,''));
-                $("#diskon1").val(formatAngka(diskonx,''));
-                $("#jumlah1").val(formatAngka(jumlahx,''));
-
-            }
-
-        }, 500);
-
-        if(j1==''||j2=='0'){
-            document.getElementById("btn_simpan").disabled = true;
-        }else{
-            document.getElementById("btn_simpan").disabled = false;
-        }
-    });
-    
-    $("#hjs1").on('change',function(){  
-        var j1 = $("#qty1").val().replace(/[^,\d]/g, '').toString();
-        var k1 = $("#hjs1").val().replace(/[^,\d]/g, '').toString();  
-        var j2 = $("#qty1").val().length;
-        var k2 = $("#hjs1").val().length;
-        if(j2=='0'||k2=='0'){
-            if(k2=='0'){
-                $("#hjs1").val('0');
-            }
-            $("#hppj1").val('0');
-            $("#ppn1").val('0');
-            $("#diskon1").val('0');
-            $("#jumlah1").val('0');
-        }else{
-            var j3 = parseFloat(j1); 
-            var k3 = parseFloat(k1); 
-            var l3 = formatAngka(j3*k3,'');
-            $("#hppj1").val(l3);
-            var ppnpersenx = parseFloat($("#ppnpersen1").val());
-            var diskonpersenx = parseFloat($("#diskonpersen1").val());
-            var ppnx = Math.round(j3 * k3 * ppnpersenx / 100);
-            var diskonx = Math.round(j3 * k3 * diskonpersenx / 100);
-            var jumlahx = (j3 * k3) + ppnx - diskonx;
-            $("#ppn1").val(formatAngka(ppnx,''));
-            $("#diskon1").val(formatAngka(diskonx,''));
-            $("#jumlah1").val(formatAngka(jumlahx,''));
-
-        }
-
-        if(j1==''||j2=='0'){
-            document.getElementById("btn_simpan").disabled = true;
-        }else{
-            document.getElementById("btn_simpan").disabled = false;
-        }
-    });
-
-    $("#hjs1").on('keyup',function(){  
-        var j1 = $("#qty1").val().replace(/[^,\d]/g, '').toString();
-        var k1 = $("#hjs1").val().replace(/[^,\d]/g, '').toString();  
-        var j2 = $("#qty1").val().length;
-        var k2 = $("#hjs1").val().length;
-        if(j2=='0'||k2=='0'){
-            if(k2=='0'){
-                $("#hjs1").val('0');
-            }
-            $("#hppj1").val('0');
-            $("#ppn1").val('0');
-            $("#diskon1").val('0');
-            $("#jumlah1").val('0');
-        }else{
-            var j3 = parseFloat(j1); 
-            var k3 = parseFloat(k1); 
-            var l3 = formatAngka(j3*k3,'');
-            $("#hppj1").val(l3);
-            var ppnpersenx = parseFloat($("#ppnpersen1").val());
-            var diskonpersenx = parseFloat($("#diskonpersen1").val());
-            var ppnx = Math.round(j3 * k3 * ppnpersenx / 100);
-            var diskonx = Math.round(j3 * k3 * diskonpersenx / 100);
-            var jumlahx = (j3 * k3) + ppnx - diskonx;
-            $("#ppn1").val(formatAngka(ppnx,''));
-            $("#diskon1").val(formatAngka(diskonx,''));
-            $("#jumlah1").val(formatAngka(jumlahx,''));
-
-        }
-
-        if(j1==''||j2=='0'){
-            document.getElementById("btn_simpan").disabled = true;
-        }else{
-            document.getElementById("btn_simpan").disabled = false;
-        }
-    });
-    
-    $("#ppn1").on('change',function(){  
-        var hppjx =parseFloat($("#hppj1").val().replace(/[^,\d]/g, '').toString());
-        var diskonx =parseFloat($("#diskon1").val().replace(/[^,\d]/g, '').toString());
-        var j1 = $("#ppn1").val().replace(/[^,\d]/g, '').toString();
-        var j2 = $("#ppn1").val().length;
-        
-        if(j1==''||j2=='0'){
-            $("#ppn1").val('0');
-            var jumlahx = hppjx - diskonx;
-        }else{
-            var ppnx =parseFloat($("#ppn1").val().replace(/[^,\d]/g, '').toString());
-            var jumlahx = hppjx + ppnx - diskonx;
-        }
-        $("#jumlah1").val(formatAngka(jumlahx,''));
-
-    });
-    $("#ppn1").on('keyup',function(){  
-        var hppjx =parseFloat($("#hppj1").val().replace(/[^,\d]/g, '').toString());
-        var diskonx =parseFloat($("#diskon1").val().replace(/[^,\d]/g, '').toString());
-        var j1 = $("#ppn1").val().replace(/[^,\d]/g, '').toString();
-        var j2 = $("#ppn1").val().length;
-        
-        if(j1==''||j2=='0'){
-            $("#ppn1").val('0');
-            var jumlahx = hppjx - diskonx;
-        }else{
-            var ppnx =parseFloat($("#ppn1").val().replace(/[^,\d]/g, '').toString());
-            var jumlahx = hppjx + ppnx - diskonx;
-        }
-        $("#jumlah1").val(formatAngka(jumlahx,''));
-
-    });
-    $("#diskon1").on('change',function(){  
-        var hppjx =parseFloat($("#hppj1").val().replace(/[^,\d]/g, '').toString());
-        var ppnx =parseFloat($("#ppn1").val().replace(/[^,\d]/g, '').toString());
-        var j1 = $("#diskon1").val().replace(/[^,\d]/g, '').toString();
-        var j2 = $("#diskon1").val().length;
-        
-        if(j1==''||j2=='0'){
-            $("#diskon1").val('0');
-            var jumlahx = hppjx + ppnx;
-        }else{
-            var diskonx =parseFloat($("#diskon1").val().replace(/[^,\d]/g, '').toString());
-            var jumlahx = hppjx + ppnx - diskonx;
-        }
-        $("#jumlah1").val(formatAngka(jumlahx,''));
-
-    });
-
-    $("#diskon1").on('keyup',function(){  
-        var hppjx =parseFloat($("#hppj1").val().replace(/[^,\d]/g, '').toString());
-        var ppnx =parseFloat($("#ppn1").val().replace(/[^,\d]/g, '').toString());
-        var j1 = $("#diskon1").val().replace(/[^,\d]/g, '').toString();
-        var j2 = $("#diskon1").val().length;
-        
-        if(j1==''||j2=='0'){
-            $("#diskon1").val('0');
-            var jumlahx = hppjx + ppnx;
-        }else{
-            var diskonx =parseFloat($("#diskon1").val().replace(/[^,\d]/g, '').toString());
-            var jumlahx = hppjx + ppnx - diskonx;
-        }
-        $("#jumlah1").val(formatAngka(jumlahx,''));
-
-    });
+   
     
     setTimeout(() => {
         var x = $('#tgltransaksi1').val().length;
@@ -1857,7 +1502,65 @@ $(document).ready(function(){
         btn_baru_click();            
     });
     
+    function displayhutangx(){
+        var a = $('#idhutangx1').text();
+        const aArray = a.split("|");
+        var tglstatus = aArray[0];
+        var angsuranke = aArray[2];
+        var xangsuran = aArray[3];
+        var jmlangsuran = aArray[4];
+        var hutangsemula = aArray[5];
+        var sudahbayar = aArray[6];
+        var saldohutang = aArray[7];    
+        // $("#tglhutang1").val($("#idhutang1").val());     
+        // $("#keterangan1").val($("#idhutang1").val());
+        // setTimeout(() => {
+        //     $("#keterangan1").val($('#idhutangx1').text());
+        // }, 500);     
+    }
+    
+    $("#idhutang1").on('click',function(){
+        $('#idhutangx1').val($("#idhutang1").val());
+        setTimeout(() => {
+            displayhutang($('#idhutang1').val())
+        }, 100);
+    });
+
+    function displayhutang(idx){
+        var id1=idx;			
+            
+            $.ajax({
+                type  : 'get',
+                url   : `{{ url('pos01/transaksi/bayarhutangdisplayhutang')}}/${id1}`,
+                async : false,
+                dataType : 'json',	
+                
+                success : function(data){
+                    var jumlahx;
+                    var i;                
+                    var resultData = data.data;	                			
+                    for(i=0; i<resultData.length; i++){
+                        $('#tglhutang1').val(resultData[i].tglstatus);
+                        $('#nilaihutang1').val(formatAngka(resultData[i].asli));
+                        $('#sudahbayar1').val(formatAngka(resultData[i].asli - resultData[i].pokok));
+                        $('#saldohutang1').val(formatAngka(resultData[i].pokok));
+                        $('#sisasaldo1').val(formatAngka(resultData[i].pokok));                        
+                    }
+                    
+                },
+                error : function(data){
+                    alert(id1);
+                }
+            }); 
+    }
+    
     $('#btn_tambah1').on('click',function(){
+        
+        tampil_listhutang();
+        tampil_listhutangx();
+
+        $("#idhutang1").click(); 
+        displayhutang($('#idhutang1').val());
         let a = $('#tgltransaksi1').val();
         const aArray = a.split("-");
         let thn = aArray[0];
@@ -1903,17 +1606,8 @@ $(document).ready(function(){
         var nomorbukti1=$('#nomorbukti1').val();
         var idhutang1=$('#idhutang1').val();
         var idanggota1=$('#idanggota1').val();
-        var idruang1=$('#idruang1').val();
-        var hbs1=$('#hbs1').val();
-        var hpp1=$('#hpp1').val();
-        var qtycek1=$('#qtycek1').val();
-        var qty1=$('#qty1').val().replace(/[^,\d]/g, '').toString();
-        var hjs1=$('#hjs1').val().replace(/[^,\d]/g, '').toString();
-        var hppj1=$('#hppj1').val().replace(/[^,\d]/g, '').toString();
-        var ppn1=$('#ppn1').val().replace(/[^,\d]/g, '').toString();;
-        var diskon1=$('#diskon1').val().replace(/[^,\d]/g, '').toString();
-        var ppnpersen1=$('#ppnpersen1').val();
-        var diskonpersen1=$('#diskonpersen1').val();
+        var bayar1 = $('#bayar1').val().replace(/[^,\d]/g, '').toString()
+        var saldohutang1 = $('#saldohutang1').val().replace(/[^,\d]/g, '').toString()
         var keterangan1=$('#keterangan1').val();
         
         let formData = new FormData();
@@ -1922,23 +1616,14 @@ $(document).ready(function(){
             formData.append('nomorbukti1', nomorbukti1);
             formData.append('idhutang1', idhutang1);
             formData.append('idanggota1', idanggota1);
-            formData.append('idruang1', idruang1);
-            formData.append('hbs1', hbs1);
-            formData.append('hpp1', hpp1);
-            formData.append('hjs1', hjs1);
-            formData.append('qtycek1', qtycek1);
-            formData.append('qty1', qty1);
-            formData.append('hppj1', hppj1);
-            formData.append('ppn1', ppn1);
-            formData.append('diskon1', diskon1);
-            formData.append('ppnpersen1', ppnpersen1);
-            formData.append('diskonpersen1', diskonpersen1);
+            formData.append('bayar1', bayar1);
+            formData.append('saldohutang1', saldohutang1);
             formData.append('keterangan1', keterangan1);            
           
         $.ajax({
             enctype: 'multipart/form-data',
             type   : 'post',
-            url    : '{{route('pos01.transaksi.bkeluar_create')}}',
+            url    : '{{route('pos01.transaksi.bayarhutang_create')}}',
             data: formData,
             cache: false,
             processData: false,
@@ -2040,7 +1725,8 @@ $(document).ready(function(){
 
         $('#id1').val(id1);
         data_edit(id1);
-
+        tampil_listhutang();
+        tampil_listhutangx();
         $('#ModalAdd').modal('show');         
     });
 
@@ -2050,39 +1736,28 @@ $(document).ready(function(){
 
     function data_edit(idx){
         var id1=idx;			
-            
+
             $.ajax({
                 type  : 'get',
-                url   : `{{ url('pos01/transaksi/bkeluaredit')}}/${id1}`,
+                url   : `{{ url('pos01/transaksi/bayarhutangedit')}}/${id1}`,
                 async : false,
                 dataType : 'json',	
                 
-                success : function(data){
-                    var jumlahx;
-                    var i;                
+                success : function(data){                   
+                    var i;
+                    var idhutang;                
+                    var idhutangx;                
                     var resultData = data.data;	                			
                     for(i=0; i<resultData.length; i++){
-                        jumlahx = parseFloat(resultData[i].hpp)+parseFloat(resultData[i].ppn)-parseFloat(resultData[i].diskon);
-                        $('#idhutang1').val(resultData[i].idbarang);
-                        $('#barang1').val($('#idhutang1 option:selected').text());
-                        $('#kode1').val(resultData[i].barang.kode);
-                        $('#barcode1').val(resultData[i].barang.barcode);
-                        $('#idruang1').val(resultData[i].idruang);
-                        $('#ruang1').val($('#idruang1 option:selected').text()); 
-                        $('#hbs1').val(resultData[i].hbs);
-                        $('#hpp1').val(resultData[i].hpp);
-                        $('#qtycek1').val(resultData[i].qtycek);
-
-                        $('#qty1').val(formatAngka(resultData[i].qty,''));						
-                        $('#hjs1').val(formatAngka(resultData[i].hjs,''));						
-                        $('#hppj1').val(formatAngka(resultData[i].hppj,''));						
-                        $('#ppn1').val(formatAngka(resultData[i].ppn,''));						
-                        $('#diskon1').val(formatAngka(resultData[i].diskon,''));						
-                        $('#ppnpersen1').val(resultData[i].ppnpersen);
-                        $('#diskonpersen1').val(resultData[i].diskonpersen);
-                        $('#jumlah1').val(formatAngka(jumlahx,''));					
-                        $('#keterangan1').val(resultData[i].keterangan);
+                        idhutang = resultData[i].idhutang;
+                        idhutang1 = resultData[i].idhutang;;
                         
+                        $('#idhutang1').val(idhutang);
+                        $('#bayar1').val(formatAngka(resultData[i].bayar,''));
+                        $('#keterangan1').val(idhutang);
+                        $('#idhutang1').text('ddddddd');
+                        displayhutang(idhutang);
+                        $('#bayar1').change();
                     }
                     
                 },
@@ -2090,6 +1765,7 @@ $(document).ready(function(){
                     alert(id1);
                 }
             }); 
+
     }
 
     function floorn(angka,n){
@@ -2123,7 +1799,7 @@ $(document).ready(function(){
                         document.getElementById('judulkali1').removeAttribute("hidden");
                         document.getElementById('persenjasa1').removeAttribute("hidden");
                         document.getElementById('judulpersenjasa1').removeAttribute("hidden");
-                        document.getElementById('nilaihutang1').removeAttribute("hidden");
+                        // document.getElementById('nilaihutang1').removeAttribute("hidden");
                         document.getElementById('judulnilaihutang1').removeAttribute("hidden");
                     }else{
                         $("#kali1").val('1');
@@ -2131,7 +1807,7 @@ $(document).ready(function(){
                         document.getElementById('judulkali1').setAttribute("hidden","hidden");
                         document.getElementById('persenjasa1').setAttribute("hidden","hidden");
                         document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");
-                        document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
+                        // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
                         document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");
                     }
                     $("#ModalPembayaran").modal('show');
@@ -2141,10 +1817,41 @@ $(document).ready(function(){
        
     });
 
+    $("#bayar1").on('change',function(){
+        var saldohutang1=parseFloat($('#saldohutang1').val().replace(/[^,\d]/g, '').toString()); 
+        if($("#bayar1").val()==''){
+            $("#bayar1").val('0');
+        }
+        var bayar1=parseFloat($('#bayar1').val().replace(/[^,\d]/g, '').toString());
+
+        if(bayar1>=saldohutang1){
+            $("#bayar1").val(formatAngka(saldohutang1,''));
+        }
+        var bayar1=parseFloat($('#bayar1').val().replace(/[^,\d]/g, '').toString());
+        var sisasaldo1 = formatAngka(saldohutang1 - bayar1,''); 
+        $("#sisasaldo1").val(sisasaldo1);
+    });
+    $("#bayar1").on('keydown',function(){
+        var saldohutang1=parseFloat($('#saldohutang1').val().replace(/[^,\d]/g, '').toString()); 
+        if($("#bayar1").val()==''){
+            $("#bayar1").val('0');
+        }
+        var bayar1=parseFloat($('#bayar1').val().replace(/[^,\d]/g, '').toString());
+        if(bayar1>=saldohutang1){
+            $("#bayar1").val(formatAngka(saldohutang1,''));
+        }
+        var bayar1=parseFloat($('#bayar1').val().replace(/[^,\d]/g, '').toString());
+        var sisasaldo1 = formatAngka(saldohutang1 - bayar1,''); 
+        $("#sisasaldo1").val(sisasaldo1);
+    });
+
     $("#bayars1").on('change',function(){
+        var saldohutang1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
         if($("#bayars1").val()==''){
             $("#bayars1").val('0');
         }
+
+
         if($("#vouchers1").val()==''){
             $("#vouchers1").val('0');
         }
@@ -2355,45 +2062,20 @@ $(document).ready(function(){
         var savings1=parseFloat($('#savings1').val().replace(/[^,\d]/g, '').toString());        
     });
 
-    $("#kali1").on('change',function(){
-        var kalix = parseFloat($("#kali1").val());
-        if($("#kali1").val()==''){
-            $("#kali1").val('0');
-        }
-        if(kalix>'60'){
-            $("#kali1").val('60');
-        }
-        lihatpersen(kalix);
-    });
-    $("#kali1").on('keydown',function(){
-        var kalix = parseFloat($("#kali1").val());
-        if($("#kali1").val()==''){
-            $("#kali1").val('0');
-        }
-        if(kalix>'60'){
-            $("#kali1").val('60');
-        }
-        lihatpersen(kalix);
-    });
-
-    
     $("#idjenispembayaran1").on('change',function(){
         setTimeout(() => {
             var x =parseFloat($("#idjenispembayaran1").val());
             if(x=='99'){
-                document.getElementById('kali1').removeAttribute("hidden");
                 document.getElementById('judulkali1').removeAttribute("hidden");
                 document.getElementById('persenjasa1').removeAttribute("hidden");
                 document.getElementById('judulpersenjasa1').removeAttribute("hidden");
-                document.getElementById('nilaihutang1').removeAttribute("hidden");
+                // document.getElementById('nilaihutang1').removeAttribute("hidden");
                 document.getElementById('judulnilaihutang1').removeAttribute("hidden");
             }else{
-                $("#kali1").val('1');
-                document.getElementById('kali1').setAttribute("hidden","hidden");
                 document.getElementById('judulkali1').setAttribute("hidden","hidden");
                 document.getElementById('persenjasa1').setAttribute("hidden","hidden");
                 document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");
-                document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
+                // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
                 document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");
             }
             
@@ -2589,7 +2271,6 @@ $(document).ready(function(){
         var nomorbukti1 = $('#nomorbukti1').val();
         var tgltransaksi1 = $('#tgltransaksi1').val();
         var idanggota1 = $('#idanggota1').val();
-        var kali1 = $('#kali1').val();
         var persenjasa1 = $('#persenjasa1').val();
         var nilaihutang1 = $('#nilaihutang1').val().replace(/[^,\d]/g, '').toString();
                 
@@ -2610,7 +2291,6 @@ $(document).ready(function(){
             formData.append('nomorbukti1', nomorbukti1);
             formData.append('tgltransaksi1', tgltransaksi1);
             formData.append('idanggota1', idanggota1);                     
-            formData.append('kali1', kali1);                     
             formData.append('persenjasa1', persenjasa1);                     
             formData.append('nilaihutang1', nilaihutang1);                     
           

@@ -79,46 +79,45 @@ class BayarhutangController extends Controller
     {
         $id = $request['id1'];
 
-        $nb = explode(".", $request['nomorbuktia1']); ;
-        $nomorba1 = $nb[3];
+        $nb = explode(".", $request['nomorbukti1']); ;
+        $nomorb1 = $nb[3];            
 
         $validatedData = $request->validate([
-            'idbarang1' => 'required',
-            'idruang1' => 'required',
-            'nomorbuktia1' => 'required',
-            'tgltransaksi1' => 'required',
+            'idhutang1' => 'required',
             'idanggota1' => 'required',
+            'nomorbukti1' => 'required',
+            'tgltransaksi1' => 'required',
         ]);
         
+        //ambil xangsuran dan angsuranke
+        $tampil = Hutang::where('id','=',$request['idhutang1'])->get();
+        foreach ($tampil as $baris) {
+            $angsuranke = ($baris->angsuranke + 1).'/'.$baris->xangsuran;            
+        }
         //untuk input tabel yang asli
 
         $data = [
+
             'tgltransaksi' => $validatedData['tgltransaksi1'],
-            'nomorbuktia' => $validatedData['nomorbuktia1'],
-            'nomorba' => $nomorba1,
-            'idbarang' => $validatedData['idbarang1'],
+            'nomorbukti' => $validatedData['nomorbukti1'],
+            'nomorb' => $nomorb1,
             'idanggota' => $validatedData['idanggota1'],
-            'idruang' => $validatedData['idruang1'],
-            
-            'qty' => $request['qty1'],
-            'qtycek' => $request['qtycek1'],
-            'hbs' => $request['hbs1'],
-            'hjs' => $request['hjs1'],
-            'hpp' => $request['hpp1'],
-            'hppj' => $request['hppj1'],
-            'ppn' => $request['ppn1'],
-            'diskon' => $request['diskon1'],
-            'ppnpersen' => $request['ppnpersen1'],
-            'diskonpersen' => $request['diskonpersen1'],
+            'idhutang' => $validatedData['idhutang1'],
+
+            'bayar' => $request['bayar1'],
+            'awal' => $request['saldohutang1'],
+            'akhir' => $request['saldohutang1']-$request['bayar1'],
+            'angsuranke' => $angsuranke,
+
             'email' => auth()->user()->email,
             'iduser' => auth()->user()->id,
             'keterangan' => $request['keterangan1'],
         ];
 
         if ($id == '0') {
-            Bkeluar::create($data);
+            Bayarhutang::create($data);
         } else {
-            Bkeluar::where('id', '=', $id)->update($data);
+            Bayarhutang::where('id', '=', $id)->update($data);
         }
         return json_encode(array('data' => $data));
     }
@@ -869,11 +868,11 @@ class BayarhutangController extends Controller
     {
         
         $tgltransaksi1 = session('tgltransaksi1');    
-        $nomorbuktia1 = session('nomorbuktia1');    
+        $nomorbukti1 = session('nomorbukti1');    
 
-        $data = Bkeluar::with(['barang','ruang','anggota'])            
+        $data = Bayarhutang::with(['hutang','anggota'])            
             ->where('tgltransaksi','=', $tgltransaksi1)            
-            ->where('nomorbuktia','=', $nomorbuktia1)            
+            ->where('nomorbukti','=', $nomorbukti1)            
             ->get();
         return json_encode(array('data' => $data));
     }
@@ -889,16 +888,13 @@ class BayarhutangController extends Controller
 
         $data = $datax
             ->addIndexColumn()
-           
-            // ->addColumn('nabara', function ($row) {
-            //     return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->nabara : '-') .'" class="item_nabara " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->nabara : '-').'</a> ';
-            // })
-            // ->addColumn('kode', function ($row) {
-            //     return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->kode : '-') .'" class="item_kode " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->kode : '-').'</a> ';
-            // })
-            // ->addColumn('barcode', function ($row) {
-            //     return '<a href="#" style="color: white;" title="'. ($row->idbarang ? $row->barang->barcode : '-') .'" class="item_barcode " data1="' . $row->idbarang . '" data2="'. $row->barang->kode. '" data3="'. $row->barang->barcode. '" data4="'. $row->barang->hbs. '" data5="'. $row->barang->hjs. '" data6="'. $row->idruang. '" data7="'. $row->barang->ppnbeli. '" data8="'. $row->barang->diskonbeli. '" data9="'. $row->barang->ppnjual. '" data10="'. $row->barang->diskonjual. '" data11="'. $row->qty. '">'.($row->idbarang ? $row->barang->barcode : '-').'</a> ';
-            // })
+            
+            ->addColumn('tglstatus', function ($row) {
+                return '<a href="#" style="color: white;" title="'. ($row->tglstatus ? $row->tglstatus : '-') .'" class="item_tglstatus " data1="' . $row->id . '" data2="'. $row->nomorstatus. '" data3="'. $row->tglstatus.'">'.($row->tglstatus ? $row->tglstatus : '-').'</a> ';
+            })
+            ->addColumn('nomorstatus', function ($row) {
+                return '<a href="#" style="color: white;" title="'. ($row->tglstatus ? $row->nomorstatus : '-') .'" class="item_nomorstatus " data1="' . $row->id . '" data2="'. $row->nomorstatus. '" data3="'. $row->tglstatus.'">'.($row->tglstatus ? $row->nomorstatus : '-').'</a> ';
+            })
             
             ->addColumn('xangsuran', function ($row) {
                 return $row->angsuranke .'/'.$row->xangsuran;
@@ -923,6 +919,8 @@ class BayarhutangController extends Controller
             // })
             
             ->rawColumns([
+                'tglstatus',
+                'nomorstatus',
                 'xangsuran',
                 'nilaiangsuran',
                 'nilaihutang',
@@ -1000,11 +998,12 @@ class BayarhutangController extends Controller
      */
     public function edit($id)
     {
-        $data = Bkeluar::where('id', '=', $id)
-            ->with(['barang','ruang','anggota'])
+        $data = Bayarhutang::where('id', '=', $id)
+            ->with(['hutang', 'anggota'])
             ->get();
         return json_encode(array('data' => $data));       
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -1028,11 +1027,33 @@ class BayarhutangController extends Controller
         return json_encode(array('data' => $data));
     }
   
+    public function displayhutang($id)
+    {
+        $data = Hutang::where('id', '=', $id)
+            ->where('kodepokok','=','1')
+            ->get();
+        return json_encode(array('data' => $data));       
+    }
     function listhutang()
     {
-        $tampil = Barang::orderBy('nabara','asc')->get();
+        $idanggota = session('idanggota1');
+        $tampil = Hutang::where('idanggota','=',$idanggota)
+            ->where('kodepokok','=','1')
+            ->get();
         foreach ($tampil as $baris) {
-            echo "<option value='" . $baris->id . "'>". $baris->nabara . "</option>";
+            echo "<option value='" . $baris->id . "'>". $baris->nomorstatus . "</option>";
+        }
+    }
+    function listhutangx()
+    {
+        $idanggota = session('idanggota1');
+        $tampil = Hutang::where('idanggota','=',$idanggota)
+            ->where('kodepokok','=','1')
+            ->get();
+        foreach ($tampil as $baris) {
+            echo "<option value='" . $baris->id . "'>". $baris->tglstatus . "|" . $baris->nomorstatus . "|" . $baris->angsuranke + 1 . "|" . $baris->xangsuran . "|"
+                . $baris->asli / $baris->xangsuran . "|" . $baris->asli . "|" . $baris->asli - $baris->pokok  . "|" . $baris->pokok
+                . "</option>";
         }
     }
     function listruang()
@@ -1198,7 +1219,6 @@ class BayarhutangController extends Controller
                 ->get();
          
         return json_encode(array('data' => $data));
-
     }
 
     public function displaypembayaran($id)
@@ -1208,7 +1228,7 @@ class BayarhutangController extends Controller
         ->get();
         $jml = 0;
         foreach ($tampil as $baris) {
-            $jml = $jml + $baris->bayars + $baris->vochers + $baris->ambilsavings;
+            $jml = $jml + $baris->bayars + $baris->vouchers + $baris->ambilsavings;
         }
 
         $data = Stok::limit(1)

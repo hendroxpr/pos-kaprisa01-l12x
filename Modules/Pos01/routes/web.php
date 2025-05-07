@@ -170,12 +170,14 @@ Route::get('/transaksi/bayarhutangshowanggota', [BayarhutangController::class, '
 Route::post('/transaksi/bayarhutangnomorbukti', [BayarhutangController::class, 'nomorbukti'])->name('pos01.transaksi.bayarhutang_nomorbukti')->middleware('auth'); /* buat nomorbukti */
 Route::post('/transaksi/bayarhutangnomorposting', [BayarhutangController::class, 'nomorposting'])->name('pos01.transaksi.bayarhutang_nomorposting')->middleware('auth'); /* buat nomorposting */
 Route::get('/transaksi/bayarhutanglisthutang', [BayarhutangController::class, 'listhutang'])->name('pos01.transaksi.bayarhutang_listhutang')->middleware('auth'); /* menampilkan list hutang */
+Route::get('/transaksi/bayarhutanglisthutangx', [BayarhutangController::class, 'listhutangx'])->name('pos01.transaksi.bayarhutang_listhutangx')->middleware('auth'); /* menampilkan list hutangx */
 Route::get('/transaksi/bayarhutanglistruang', [BayarhutangController::class, 'listruang'])->name('pos01.transaksi.bayarhutang_listruang')->middleware('auth'); /* menampilkan list ruang */
 Route::get('/transaksi/bayarhutanglistanggota', [BayarhutangController::class, 'listanggota'])->name('pos01.transaksi.bayarhutang_listanggota')->middleware('auth'); /* menampilkan list anggota */
 Route::get('/transaksi/bayarhutanglistjenispembayaran', [BayarhutangController::class, 'listjenispembayaran'])->name('pos01.transaksi.bayarhutang_listjenispembayaran')->middleware('auth'); /* menampilkan list jenispembayaran */
 Route::post('/transaksi/bayarhutangcreate', [BayarhutangController::class, 'create'])->name('pos01.transaksi.bayarhutang_create')->middleware('auth'); /* menambah data bayarhutang */
 Route::post('/transaksi/bayarhutangproses', [BayarhutangController::class, 'proses'])->name('pos01.transaksi.bayarhutang_proses')->middleware('auth'); /* menambah proses */
 Route::get('/transaksi/bayarhutangedit/{id}', [BayarhutangController::class, 'edit'])->name('pos01.transaksi.bayarhutang_edit')->middleware('auth'); /* menampilkan data yang akan dirubah */
+Route::get('/transaksi/bayarhutangdisplayhutang/{id}', [BayarhutangController::class, 'displayhutang'])->name('pos01.transaksi.bayarhutang_displayhutang')->middleware('auth'); /* menampilkan data hutang */
 Route::get('/transaksi/bayarhutangdisplaypembayaran/{id}', [BayarhutangController::class, 'displaypembayaran'])->name('pos01.transaksi.bayarhutang_displaypembayaran')->middleware('auth'); /* menampilkan pembayaran */
 Route::post('/transaksi/bayarhutangupdate', [BayarhutangController::class, 'update'])->name('pos01.transaksi.bayarhutang_update')->middleware('auth'); /* update data bayarhutang */
 Route::post('/transaksi/bayarhutangposting', [BayarhutangController::class, 'posting'])->name('pos01.transaksi.bayarhutang_posting')->middleware('auth'); /* posting data bayarhutang */

@@ -19,6 +19,11 @@ class Hutang extends Model
     {
         return $this->belongsTo(Anggota::class,'idanggota');
     }
+
+    public function bayarhutang()
+    {
+        return $this->hasMany(Bayarhutang::class,'idhutang','id');
+    }
    
     /**
      * The attributes that are mass assignable.

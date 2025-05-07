@@ -475,7 +475,7 @@
         <div class="modal-content bg-warning w3-animate-zoom">
             
             <div class="modal-header">
-                    <h3 class="modal-title"><i style="font-size:18" class="fa">&#xf093;</i><b> Posting Barang Masuk</b></h3>
+                    <h3 class="modal-title"><i style="font-size:18" class="fa">&#xf093;</i><b> Posting Barang Keluar</b></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
                     
@@ -1400,10 +1400,11 @@ $(document).ready(function(){
             }); 
     }
     
+        
     $("#tgltransaksi1").datepicker({
            dateFormat  : "yy-mm-dd",
            changeMonth : true,
-           changeYear  : true         
+           changeYear  : true,         
     });
     
     $('#tgltransaksi1').on('click',function(){
