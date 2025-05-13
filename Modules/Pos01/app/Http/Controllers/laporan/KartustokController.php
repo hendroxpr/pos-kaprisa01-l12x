@@ -183,9 +183,9 @@ class KartustokController extends Controller
                 return $row->idbarang ? $row->barang->satuan->kode : '';
             })
 
-            ->addColumn('awal', function ($row) {
-                return $row->masuk ? Number_Format($row->masuk,0) : '';
-            })
+            // ->addColumn('awal', function ($row) {
+            //     return $row->masuk ? Number_Format($row->masuk,0) : '';
+            // })
             ->addColumn('hbsawal', function ($row) {
                 return $row->hbsawal ? Number_Format($row->hbsawal,0) : '';
             })
@@ -310,9 +310,9 @@ class KartustokController extends Controller
                 return $row->idbarang ? $row->barang->satuan->kode : '';
             })
 
-            ->addColumn('awal', function ($row) {
-                return $row->masuk ? Number_Format($row->masuk,0) : '';
-            })
+            // ->addColumn('awal', function ($row) {
+            //     return $row->masuk ? Number_Format($row->masuk,0) : '';
+            // })
             ->addColumn('hbsawal', function ($row) {
                 return $row->hbsawal ? Number_Format($row->hbsawal,0) : '';
             })
@@ -432,9 +432,9 @@ class KartustokController extends Controller
                 return $row->idbarang ? $row->barang->satuan->kode : '';
             })
 
-            ->addColumn('awal', function ($row) {
-                return $row->masuk ? Number_Format($row->masuk,0) : '';
-            })
+            // ->addColumn('awal', function ($row) {
+            //     return $row->masuk ? Number_Format($row->masuk,0) : '';
+            // })
             ->addColumn('hbsawal', function ($row) {
                 return $row->hbsawal ? Number_Format($row->hbsawal,0) : '';
             })
@@ -554,9 +554,9 @@ class KartustokController extends Controller
                 return $row->idbarang ? $row->barang->satuan->kode : '';
             })
 
-            ->addColumn('awal', function ($row) {
-                return $row->masuk ? Number_Format($row->masuk,0) : '';
-            })
+            // ->addColumn('awal', function ($row) {
+            //     return $row->masuk ? Number_Format($row->masuk,0) : '';
+            // })
             ->addColumn('hbsawal', function ($row) {
                 return $row->hbsawal ? Number_Format($row->hbsawal,0) : '';
             })
