@@ -55,6 +55,7 @@
                 <td>Web</td>
                 <td>{{ session('memwebsite') }}</td>
             </tr>
+            
 
         </table>
     </div>
@@ -113,6 +114,7 @@
                 <td>Device</td>
                 <td>{{ $result }}</td>
             </tr>
+            
 
         </table>
     </div>

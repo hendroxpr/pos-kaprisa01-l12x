@@ -126,489 +126,130 @@ class BayarhutangController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $created_at1 = date('Y-m-d  H:i:s'); 
-        $status1 = 'keluar';
+        $status1 = 'bayar';
 
         $tgltransaksi1 = $request['tgltransaksi1'];
-        $nomorbuktia1 = $request['nomorbuktia1'];
+        $nomorbukti1 = $request['nomorbukti1'];
         $tglposting1 = $request['tglposting1'];
         $nomorposting1 = $request['nomorposting1'];
 
-        $np = explode(".", $request['nomorposting1']);
+        $np = explode(".", $nomorposting1);
         $nomorp1 = intval($np[3]);
 
         $validatedData = $request->validate([
             'tgltransaksi1' => 'required',
-            'nomorbuktia1' => 'required',
+            'nomorbukti1' => 'required',
             'tglposting1' => 'required',
             'nomorposting1' => 'required',
         ]);
 
-        $tampil = Bkeluar::with(['barang','ruang','anggota']) 
+        $tampil = Bayarhutang::with(['hutang','anggota']) 
             ->where('tgltransaksi','=',  $validatedData['tgltransaksi1'])            
-            ->where('nomorbuktia','=',  $validatedData['nomorbuktia1'])
+            ->where('nomorbukti','=',  $validatedData['nomorbukti1'])
             ->get();
-
+        $bayarx = 0;
         foreach ($tampil as $baris) {
-            $idbarang1 = $baris->idbarang;
-            $idruang1 = $baris->idruang;
-            $idanggota1 = $baris->idanggota;
-            $nama1 = $baris->anggota->nama;
-            $idseksi1 = $baris->ruang->idseksi;
-            $idstatus1 = $baris->id;
+            $idanggota1 = $baris->idanggota;            
+            $idhutang1 = $baris->idhutang;            
+            $idstatus1 = $baris->id;            
             $tgltransaksi1 = $baris->tgltransaksi;
-            $nomorbuktia1 = $baris->nomorbuktia;
-            $qty1 = $baris->qty;
-            $hbs1 = $baris->hbs;
-            $hjs1 = $baris->hjs;
-            $hpp1 = $baris->hpp;
-            $hppj1 = $baris->hppj;
-            $ppn1 = $baris->ppn;
-            $diskon1 = $baris->diskon;
+            $nomorbukti1 = $baris->nomorbukti;
+
+            $angske = explode("/", $baris->angsuranke); ;
+            $angsuranke1 = $angske[0];
+
+            $awal1 = $baris->awal;
+            $bayar1 = $baris->bayar;
+            $bayarx = $bayarx + $bayar1;
+            $akhir1 = $baris->akhir;
+            
             $email1 = $baris->email;
             $keterangan1 = $baris->keterangan;
             $iduser1 = $baris->iduser;
 
-            //2.barangruang
-            $qty2 = Barangruang::where('idbarang','=',$idbarang1)
-            ->where('idruang','=',$idruang1)->count();
-
-            if($qty2==1){
-                $tampil2 = Barangruang::where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)->get();
-                foreach ($tampil2 as $baris) {
-                    $qtyx = $baris->qty;
-                }
-                $data2 = [
-                    'qty' => $qtyx-$qty1,
-                ];
-                Barangruang::where('idbarang','=',$idbarang1)
-                    ->where('idruang','=',$idruang1)->update($data2);
-            }
-
-            //3.barang gak dipakai
-                // $qty2 = Barang::where('id','=',$idbarang1)->count();
-                // if($qty2==1){                
-                //     $data2 = [
-                //         'hbs' => $hbs1,
-                //     ];
-                //     Barang::where('id','=',$idbarang1)->update($data2);
-                // }
-
-            //4.stok
-            $qty2 = Stok::where('idbarang','=',$idbarang1)
-            ->where('idruang','=',$idruang1)->count();
-
+            //1. bayarhutang
+            $qty2 = Bayarhutang::with(['hutang','anggota']) 
+            ->where('tgltransaksi','=',  $validatedData['tgltransaksi1'])            
+            ->where('nomorbukti','=',  $validatedData['nomorbukti1'])
+            ->count();
             if($qty2<>'0'){
-                $tampil2 = stok::limit(1)
-                ->where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)
-                ->where('created_at','<',$created_at1)
-                ->orderBy('created_at','desc')
-                ->get();
-                
-                foreach ($tampil2 as $baris) {
-                    $awalx = $baris->akhir;
-                    $hbsawalx = $baris->hbsakhir;
-                    $hppawalx = $baris->hppakhir;
-                }
-                $akhirx = $awalx - $qty1;
-                $hbsakhirx = $hbs1;
-                $hppakhirx = $akhirx*$hbs1; 
-                $labajx = $hppj1+$ppn1-$diskon1-$hpp1; 
-
-                $data2 = [
-                    'idbarang' => $idbarang1,
-                    'idanggota' => $idanggota1,
-                    'idseksi' => $idseksi1,
-                    'idruang' => $idruang1,
-                    'nama' => $nama1,
-                    'status' => $status1,
-                    'tglstatus' => $tgltransaksi1,
-                    'nomorstatus' => $nomorbuktia1,
-                    'idstatus' => $idstatus1,
-                    'created_at' => $created_at1,
+                $data2 = [                    
                     'tglposting' => $validatedData['tglposting1'],
-                    'nomorp' => $nomorp1,
-                    'nomorposting' => $validatedData['nomorposting1'],
-                    'awal' => $awalx,
-                    'hbsawal' => $hbsawalx,
-                    'hppawal' => $hppawalx,
-                    'keluar' => $qty1,
-                    'hbskeluar' => $hbs1,
-                    'hppkeluar' => $hpp1,
-                    'ppnkeluar' => $ppn1,
-                    'diskonkeluar' => $diskon1,
-                    'hjs' => $hjs1,
-                    'hppj' => $hppj1,
-                    'labaj' => $labajx,
-                    'akhir' => $akhirx,
-                    'hbsakhir' => $hbs1,
-                    'hppakhir' => $hppakhirx,
-                    'email' => $email1,
-                    'iduser' => $iduser1,
+                    'nomorposting' => $validatedData['nomorposting1'],                    
                     'keterangan' => $keterangan1,
                 ];
-                Stok::create($data2);
-            }else{
-                //
+                Bayarhutang::with(['hutang','anggota']) 
+                ->where('tgltransaksi','=',  $validatedData['tgltransaksi1'])            
+                ->where('nomorbukti','=',  $validatedData['nomorbukti1'])
+                ->update($data2); 
             }
 
-            //5.stokmova
-            $qty2 = Stokmova::where('idbarang','=',$idbarang1)
-            ->where('idruang','=',$idruang1)->count();
+            //2. hutang
+            $tampil2 = Hutang::where('id','=', $idhutang1)->get();
+            foreach ($tampil2 as $baris) {
+                $pokokx = $baris->pokok - $bayar1;
+                $angskex = $baris->angsuranke + 1;
+            }
 
-            if($qty2<>'0'){
-                $tampil2 = Stokmova::limit(1)
-                ->where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)
-                ->where('created_at','<',$created_at1)
-                ->orderBy('created_at','desc')
-                ->get();
-                
-                foreach ($tampil2 as $baris) {
-                    $awalx = $baris->akhir;
-                    $hbsawalx = $baris->hbsakhir;
-                    $hppawalx = $baris->hppakhir;
-                }
-
-                $totalawaldankeluar = $hppawalx - $hpp1; 
-                $totalqtyawaldankeluar = $awalx - $qty1;
-                $hbsakhirx =  $totalawaldankeluar/$totalqtyawaldankeluar;
-                
-                $keluarx = $qty1;
-                $hbskeluarx = $hbs1; 
-                $hppkeluarx = $hpp1; 
-                
-                $akhirx = $awalx-$keluarx;
-                $hppakhirx = $akhirx*$hbsakhirx; 
-                $labajx = $hppj1+$ppn1-$diskon1-$hpp1;
-
+            if($pokokx=='0'){
+                $data2 = [                    
+                    'pokok' => $pokokx,
+                    'angsuranke' => $angskex,                    
+                    'kodepokok' => '0',                    
+                ]; 
+                Hutang::where('id','=', $idhutang1)->update($data2);
+            }else{
                 $data2 = [
-                    'idbarang' => $idbarang1,
-                    'idanggota' => $idanggota1,
-                    'idseksi' => $idseksi1,
-                    'idruang' => $idruang1,
-                    'nama' => $nama1,
-                    'status' => $status1,
-                    'tglstatus' => $tgltransaksi1,
-                    'nomorstatus' => $nomorbuktia1,
-                    'idstatus' => $idstatus1,
-                    'created_at' => $created_at1,
-                    'tglposting' => $validatedData['tglposting1'],
-                    'nomorp' => $nomorp1,
-                    'nomorposting' => $validatedData['nomorposting1'],
-                    'awal' => $awalx,
-                    'hbsawal' => $hbsawalx,
-                    'hppawal' => $hppawalx,
-                    'keluar' => $qty1,
-                    'hbskeluar' => $hbskeluarx,
-                    'hppkeluar' => $hppkeluarx,
-                    'ppnkeluar' => $ppn1,
-                    'diskonkeluar' => $diskon1,
-                    'hjs' => $hjs1,
-                    'hppj' => $hppj1,
-                    'labaj' => $labajx,
-                    'akhir' => $akhirx,
-                    'hbsakhir' => $hbsakhirx,
-                    'hppakhir' => $hppakhirx,
-                    'email' => $email1,
-                    'iduser' => $iduser1,
-                    'keterangan' => $keterangan1,
+                    'pokok' => $pokokx,
+                    'angsuranke' => $angskex,
                 ];
-                Stokmova::create($data2);
-            }else{
-                //
+                Hutang::where('id','=',$idhutang1)->update($data2);
             }
-            
-            //5.stokfifo
-            $qty2 = Stokfifo::where('idbarang','=',$idbarang1)
-            ->where('idruang','=',$idruang1)
-            ->where('created_at','<',$created_at1)
-            ->where('kodepokok','=','1')
-            ->count();
 
-            if($qty2<>'0'){
-                //cek data terakhir
-                $tampil2 = Stokfifo::limit(1)
-                ->where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)
-                ->where('created_at','<',$created_at1)
-                ->where('kodepokok','=','2')
-                ->orderBy('created_at','desc')
+            $tampil1 = Hutang::where('id','=',$idhutang1)->get();
+            foreach ($tampil1 as $baris) {
+                $nomorstatusasal1 = $baris->nomorstatus;                
+                $angsuranke1 = $baris->angsuranke;
+                $xangsuran1 = $baris->xangsuran;
+            }
+
+            $tampil2 = Hutang::limit(1)
+                ->where('idanggota','=', $idanggota1)
+                ->where('kodepokok','=', '2')
+                ->orderBy('id','desc')
                 ->get();
                 foreach ($tampil2 as $baris) {
-                    $awalx = $baris->akhir;
-                    $hbsawalx = $baris->hbsakhir;
-                    $hppawalx = $baris->hppakhir;
+                    $awal1 = $baris->akhir;
+                    
                 }
-
-                $qty3 = Stokfifo::where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)
-                ->where('created_at','<=',$created_at1)
-                ->where('kodepokok','=','1')
-                ->count();
-                
-                if($qty3<>'0'){
-                    $tampil3 = Stokfifo::where('idbarang','=',$idbarang1)
-                    ->where('idruang','=',$idruang1)
-                    ->where('created_at','<=',$created_at1)
-                    ->where('kodepokok','=','1')
-                    ->orderBy('created_at','asc')
-                    ->get();
-                    $pkkx = 0;
-                    $hpppkkx = 0;
-                    $sisax = $qty1;
-                    $totalhppkeluar=0;
-                    $qtyx = 0;
-                    foreach ($tampil3 as $baris) {
-                        $idx = $baris->id;
-                        $pokokx = $baris->pokok;
-                        $pkkx = $pkkx + $pokokx;
-                        $sisax = $qty1 - $pkkx;
-                        $hbspokokx = $baris->hbspokok;    
-                        if($sisax<'0'){
-                            if($qtyx=='0'){
-                                $sisapokok = $pokokx-$qty1;
-                                $totalhppkeluar = $totalhppkeluar + ($qty1 * $hbspokokx);
-                                $sisahpppokok = $sisapokok * $hbspokokx; 
-                                $data1 = [
-                                    'pokok' => $sisapokok,
-                                    'hpppokok' => $sisahpppokok,
-                                ];
-                                Stokfifo::where('id', '=', $idx)->update($data1);                            
-                                
-                            }else{
-                                $sisapokok = $pokokx-$qtyx;
-                                $totalhppkeluar = $totalhppkeluar + ($qtyx * $hbspokokx);
-                                $sisahpppokok = $sisapokok * $hbspokokx;
-                                $data1 = [
-                                    'pokok' => $sisapokok,
-                                    'hpppokok' => $sisahpppokok,
-                                ];
-                                Stokfifo::where('id', '=', $idx)->update($data1);                            
-
-                            }
-                            break;
-                        }else{
-                            $qtyx = $qty1-$pkkx;
-                            $totalhppkeluar = $totalhppkeluar + ($pokokx * $hbspokokx);
-                            $data1 = [
-                                'pokok' => 0,
-                                'hbspokok' => 0,
-                                'hpppokok' => 0,
-                                'kodepokok' => 0,
-                            ];
-                            Stokfifo::where('id', '=', $idx)->update($data1);
-                            
-                            if($qtyx=='0'){                                                              
-                                break;
-                            }
-
-                        }
-                        
-                    }
-
-                    $akhirx = $awalx - $qty1;
-                    $hppkeluarx = $totalhppkeluar;
-                    $hbskeluarx = $hppkeluarx/$qty1;
-                    $hppakhirx = $hppawalx - $hppkeluarx;
-                    $hbsakhirx = $hppakhirx/$akhirx;
-                    $labajx = $hppj1+$ppn1-$diskon1-$hpp1;  
-                    $data2 = [
-                        'idbarang' => $idbarang1,
-                        'idanggota' => $idanggota1,
-                        'idseksi' => $idseksi1,
-                        'idruang' => $idruang1,
-                        'nama' => $nama1,
-                        'status' => $status1,
-                        'tglstatus' => $tgltransaksi1,
-                        'nomorstatus' => $nomorbuktia1,
-                        'idstatus' => $idstatus1,
-                        'created_at' => $created_at1,
-                        'tglposting' => $validatedData['tglposting1'],
-                        'nomorp' => $nomorp1,
-                        'nomorposting' => $validatedData['nomorposting1'],
-                        'awal' => $awalx,
-                        'hbsawal' => $hbsawalx,
-                        'hppawal' => $hppawalx,
-                        'keluar' => $qty1,
-                        'hbskeluar' => $hbskeluarx,
-                        'hppkeluar' => $hppkeluarx,
-                        'ppnkeluar' => $ppn1,
-                        'diskonkeluar' => $diskon1,
-                        'hjs' => $hjs1,
-                        'hppj' => $hppj1,
-                        'labaj' => $labajx,
-                        'akhir' => $akhirx,
-                        'hbsakhir' => $hbsakhirx,
-                        'hppakhir' => $hppakhirx,
-                        'email' => $email1,
-                        'iduser' => $iduser1,
-                        'keterangan' => $keterangan1,
-                        'kodepokok' => 2,
-                    ];
-                    Stokfifo::create($data2);
-                }else{
-                    //
-                }
-
-            }else{
-                //
-            }
-
-            //5.stoklifo
-            $qty2 = Stoklifo::where('idbarang','=',$idbarang1)
-            ->where('idruang','=',$idruang1)
-            ->where('created_at','<',$created_at1)
-            ->where('kodepokok','=','1')
-            ->count();
-
-            if($qty2<>'0'){
-                //cek data terakhir
-                $tampil2 = Stoklifo::limit(1)
-                ->where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)
-                ->where('created_at','<',$created_at1)
-                ->where('kodepokok','=','2')
-                ->orderBy('created_at','desc')
-                ->get();
-                foreach ($tampil2 as $baris) {
-                    $awalx = $baris->akhir;
-                    $hbsawalx = $baris->hbsakhir;
-                    $hppawalx = $baris->hppakhir;
-                }
-
-                $qty3 = Stoklifo::where('idbarang','=',$idbarang1)
-                ->where('idruang','=',$idruang1)
-                ->where('created_at','<=',$created_at1)
-                ->where('kodepokok','=','1')
-                ->count();
-                
-                if($qty3<>'0'){
-                    $tampil3 = Stoklifo::where('idbarang','=',$idbarang1)
-                    ->where('idruang','=',$idruang1)
-                    ->where('created_at','<=',$created_at1)
-                    ->where('kodepokok','=','1')
-                    ->orderBy('created_at','desc')
-                    ->get();
-                    $pkkx = 0;
-                    $hpppkkx = 0;
-                    $sisax = $qty1;
-                    $totalhppkeluar=0;
-                    $qtyx = 0;
-                    foreach ($tampil3 as $baris) {
-                        $idx = $baris->id;
-                        $pokokx = $baris->pokok;
-                        $pkkx = $pkkx + $pokokx;
-                        $sisax = $qty1 - $pkkx;
-                        $hbspokokx = $baris->hbspokok;    
-                        if($sisax<'0'){
-                            if($qtyx=='0'){
-                                $sisapokok = $pokokx-$qty1;
-                                $totalhppkeluar = $totalhppkeluar + ($qty1 * $hbspokokx);
-                                $sisahpppokok = $sisapokok * $hbspokokx; 
-                                $data1 = [
-                                    'pokok' => $sisapokok,
-                                    'hpppokok' => $sisahpppokok,
-                                ];
-                                Stoklifo::where('id', '=', $idx)->update($data1);                            
-                                
-                            }else{
-                                $sisapokok = $pokokx-$qtyx;
-                                $totalhppkeluar = $totalhppkeluar + ($qtyx * $hbspokokx);
-                                $sisahpppokok = $sisapokok * $hbspokokx;
-                                $data1 = [
-                                    'pokok' => $sisapokok,
-                                    'hpppokok' => $sisahpppokok,
-                                ];
-                                Stoklifo::where('id', '=', $idx)->update($data1);                            
-
-                            }
-                            break;
-                        }else{
-                            $qtyx = $qty1-$pkkx;
-                            $totalhppkeluar = $totalhppkeluar + ($pokokx * $hbspokokx);
-                            $data1 = [
-                                'pokok' => 0,
-                                'hbspokok' => 0,
-                                'hpppokok' => 0,
-                                'kodepokok' => 0,
-                            ];
-                            Stoklifo::where('id', '=', $idx)->update($data1);
-                            
-                            if($qtyx=='0'){                                                              
-                                break;
-                            }
-
-                        }
-                        
-                    }
-
-                    $akhirx = $awalx - $qty1;
-                    $hppkeluarx = $totalhppkeluar;
-                    $hbskeluarx = $hppkeluarx/$qty1;
-                    $hppakhirx = $hppawalx - $hppkeluarx;
-                    $hbsakhirx = $hppakhirx/$akhirx;  
-                    $labajx = $hppj1+$ppn1-$diskon1-$hpp1;
-
-                    $data2 = [
-                        'idbarang' => $idbarang1,
-                        'idanggota' => $idanggota1,
-                        'idseksi' => $idseksi1,
-                        'idruang' => $idruang1,
-                        'nama' => $nama1,
-                        'status' => $status1,
-                        'tglstatus' => $tgltransaksi1,
-                        'nomorstatus' => $nomorbuktia1,
-                        'idstatus' => $idstatus1,
-                        'created_at' => $created_at1,
-                        'tglposting' => $validatedData['tglposting1'],
-                        'nomorp' => $nomorp1,
-                        'nomorposting' => $validatedData['nomorposting1'],
-                        'awal' => $awalx,
-                        'hbsawal' => $hbsawalx,
-                        'hppawal' => $hppawalx,
-                        'keluar' => $qty1,
-                        'hbskeluar' => $hbskeluarx,
-                        'hppkeluar' => $hppkeluarx,
-                        'ppnkeluar' => $ppn1,
-                        'diskonkeluar' => $diskon1,
-                        'hjs' => $hjs1,
-                        'hppj' => $hppj1,
-                        'labaj' => $labajx,
-                        'akhir' => $akhirx,
-                        'hbsakhir' => $hbsakhirx,
-                        'hppakhir' => $hppakhirx,
-                        'email' => $email1,
-                        'iduser' => $iduser1,
-                        'keterangan' => $keterangan1,
-                        'kodepokok' => 2,
-                    ];
-                    Stoklifo::create($data2);
-                }else{
-                    //
-                }
-
-            }else{
-                //
-            }
-
-            //6.update bmasuk
-            $data = [
-                'tglposting' => $validatedData['tglposting1'],
-                'nomorposting' => $validatedData['nomorposting1'],                        
-            ];
-                 
-            Bkeluar::with(['barang','ruang','anggota']) 
-            ->where('tgltransaksi','=', $tgltransaksi1)            
-            ->where('nomorbuktia','=', $nomorbuktia1)
-            ->update($data);
+                $data2 = [
+                    'kodepokok' => 2,
+                    'idanggota' => $idanggota1,
+                    'tglstatus' => $tgltransaksi1,                    
+                    'nomorp' => $nomorp1,
+                    'nomorstatus' => $nomorbukti1,
+                    'nomorstatusasal' => $nomorstatusasal1,
+                    'idstatus' => $idstatus1,
+                    'status' => $status1,
+                    'tglposting' => $tglposting1,
+                    'nomorposting' => $nomorposting1,
+                    'xangsuran' => $xangsuran1,
+                    'created_at' => $created_at1,
+                    'awal' => $awal1,
+                    'masuk' => 0,
+                    'keluar' => $bayar1,
+                    'akhir' => $awal1 - $bayar1,
+                    'totalori' => $bayar1,
+                    'persenjasa' => 0,
+                    'angsuranke' => $angsuranke1,
+                    'email' => auth()->user()->email,
+                    'iduser' => auth()->user()->id,                               
+                                                   
+                ];
+                Hutang::create($data2);
 
         }
 
-            
-
-        // return json_encode('data');
     }
 
     public function proses(Request $request)
@@ -630,14 +271,13 @@ class BayarhutangController extends Controller
         $idjenispembayaran1 = $request['idjenispembayaran1'];
         $nomorpostingnya1 = $request['nomorpostingnya1'];
         $tglpostingnya1 = $request['tglpostingnya1'];
-        $nomorbuktia1 = $request['nomorbuktia1'];
+        $nomorbukti1 = $request['nomorbukti1'];
         $tgltransaksi1 = $request['tgltransaksi1'];
         $idanggota1 = $request['idanggota1'];
-        $xangsuran1 = $request['kali1'];
 
             
         if($tgltransaksi1 == $tglsekarang){
-            //update stok, stokfifo, stoklifo, updatemova
+            //update hutang
 
             $data = [
                 'subtotals' => $subtotals1,
@@ -649,194 +289,79 @@ class BayarhutangController extends Controller
                 'ambilsavings' => $ambilsavings1,
                 'kembalis' => $kembalis1,
                 'savings' => $savings1,
-                'idjenispembayaran' => $idjenispembayaran1,                
-                'xangsuran' => $xangsuran1,                
+                'idjenispembayaran' => $idjenispembayaran1,               
+                             
             ]; 
-            $tampil = Stok::where('nomorstatus','=',$nomorbuktia1)->count();
+            $tampil = Hutang::where('nomorstatus','=',$nomorbukti1)->count();
             if($tampil<>'0'){
-                Stok::where('nomorstatus','=',$nomorbuktia1)->update($data);
+                hutang::where('nomorstatus','=',$nomorbukti1)->update($data);
             }
-            $tampil = Stokfifo::where('nomorstatus','=',$nomorbuktia1)->count();
-            if($tampil<>'0'){
-                Stokfifo::where('nomorstatus','=',$nomorbuktia1)->update($data);
-            }
-            $tampil = Stoklifo::where('nomorstatus','=',$nomorbuktia1)->count();
-            if($tampil<>'0'){
-                Stoklifo::where('nomorstatus','=',$nomorbuktia1)->update($data);
-            }
-            $tampil = Stokmova::where('nomorstatus','=',$nomorbuktia1)->count();
-            if($tampil<>'0'){
-                Stokmova::where('nomorstatus','=',$nomorbuktia1)->update($data);
-            }
-
+            
             //savings
-            if($savings1=='0'||''){
-                Savings::where('idanggota','=',$idanggota1)
-                ->where('nomorbukti','=',$nomorbuktia1)
-                ->delete();
-            }else{
+            if($savings1>'0'||$ambilsavings1>'0'){
                 $tampil = Savings::where('idanggota','=',$idanggota1)
-                ->where('nomorbukti','<',$nomorbuktia1)
-                ->count(); 
-                if($tampil<>'0'){
-                    $tampil1 = Savings::where('idanggota','=',$idanggota1)
-                        ->orderBy('nomorbukti','desc')        
-                        ->get();
-                    foreach ($tampil1 as $baris) {
-                        $awalx = $baris->akhir;
-                    }
-                    $tampil2 = Savings::where('idanggota','=',$idanggota1)
-                    ->where('nomorbukti','=',$nomorbuktia1)
-                    ->count();
-                    $data = [
-                        'idanggota' => $idanggota1,
-                        'tgltransaksi' => $tgltransaksi1,
-                        'nomorbukti' => $nomorbuktia1,
-                        'tglposting' => $tglpostingnya1,
-                        'nomorposting' => $nomorpostingnya1,
-                        'awal' => $awalx,
-                        'masuk' => $savings1,
-                        'keluar' => $ambilsavings1,
-                        'akhir' => $awalx + $savings1 - $ambilsavings1,
-                        'email' => auth()->user()->email,
-                        'iduser' => auth()->user()->id,                                
-                    ];
-                    if($tampil2<>'0'){
-                        Savings::where('idanggota','=',$idanggota1)
-                        ->where('nomorbukti','=',$nomorbuktia1)
-                        ->update($data);
-                    }else{
-                        Savings::create($data);
-                    }
-                }else{
-                    $tampil2 = Savings::where('idanggota','=',$idanggota1)
-                    ->where('nomorbukti','=',$nomorbuktia1)
-                    ->count();
-                    $data = [
-                        'idanggota' => $idanggota1,
-                        'tgltransaksi' => $tgltransaksi1,
-                        'nomorbukti' => $nomorbuktia1,
-                        'tglposting' => $tglpostingnya1,
-                        'nomorposting' => $nomorpostingnya1,
-                        'awal' => 0,
-                        'masuk' => $savings1,
-                        'keluar' => $ambilsavings1,
-                        'akhir' => 0 + $savings1 - $ambilsavings1,  
-                        'email' => auth()->user()->email,
-                        'iduser' => auth()->user()->id,                              
-                    ];
-                    if($tampil2<>'0'){
-                        Savings::where('idanggota','=',$idanggota1)
-                        ->where('nomorbukti','=',$nomorbuktia1)
-                        ->update($data);
-                    }else{
-                        Savings::create($data);
-                    }
-                    
-                }
-            }
-
-            //hutang
-            if($idjenispembayaran1<>'99'){
-                Hutang::where('idanggota','=',$idanggota1)
-                ->where('nomorstatus','=',$nomorbuktia1)
-                ->delete();
-            }else{
-                $tampil = Hutang::where('idanggota','=',$idanggota1)
-                ->where('kodepokok','=',2)
-                ->where('created_at','<',$created_at1)
-                ->count(); 
-                if($tampil<>'0'){
-                    $tampil1 = Hutang::where('idanggota','=',$idanggota1)
-                        ->where('kodepokok','=',2)
-                        ->where('created_at','<',$created_at1)
-                        ->orderBy('created_at','desc')        
-                        ->get();
-                    foreach ($tampil1 as $baris) {
-                        $awalx = $baris->awal;
-                        $akhirx = $baris->akhir;
-                        $nomorbuktix = $baris->nomorstatus;
-                    }
-                    if($nomorbuktix==$nomorbuktia1){
-                        $data = [
-                            'kodepokok' => 2,
-                            'xangsuran' => $xangsuran1,
-                            'created_at' => $created_at1,
-                            'tglposting' => $tglpostingnya1,
-                            'nomorposting' => $nomorpostingnya1,
-                            'masuk' => $totals1,
-                            'akhir' => $awalx + $totals1,
-                            'email' => auth()->user()->email,
-                            'iduser' => auth()->user()->id,                                
-                        ]; 
-                        Hutang::where('idanggota','=',$idanggota1)
-                        ->where('kodepokok','=',2)
-                        ->where('nomorstatus','=',$nomorbuktia1)
-                        ->update($data);
-                    }else{
-                        $data = [
-                            'kodepokok' => 2,
-                            'idanggota' => $idanggota1,
-                            'tglstatus' => $tgltransaksi1,
-                            'nomorstatus' => $nomorbuktia1,
-                            'status' => $status1,
-                            'tglposting' => $tglpostingnya1,
-                            'nomorposting' => $nomorpostingnya1,
-                            'xangsuran' => $xangsuran1,
-                            'created_at' => $created_at1,
-                            'awal' => $awalx,
-                            'masuk' => $totals1,
-                            'akhir' => $awalx + $totals1,
-                            'email' => auth()->user()->email,
-                            'iduser' => auth()->user()->id,                                
-                        ];
-                        Hutang::create($data);
-                    }
-
-                }else{                
-                    $data = [
-                        'kodepokok' => 2,
-                        'idanggota' => $idanggota1,
-                        'tglstatus' => $tgltransaksi1,
-                        'nomorstatus' => $nomorbuktia1,
-                        'status' => $status1,
-                        'tglposting' => $tglpostingnya1,
-                        'nomorposting' => $nomorpostingnya1,
-                        'xangsuran' => $xangsuran1,
-                        'created_at' => $created_at1,
-                        'awal' => 0,
-                        'masuk' => $totals1,
-                        'akhir' => 0 + $totals1, 
-                        'email' => auth()->user()->email,
-                        'iduser' => auth()->user()->id,                               
-                    ];
-                    Hutang::create($data);
-                }
-                $tampil = Hutang::where('idanggota','=',$idanggota1)
-                ->where('kodepokok','=',1)
-                ->where('nomorstatus','=',$nomorbuktia1)
+                ->where('nomorbukti','<>',$nomorbukti1)
+                ->where('akhir','>','0')
                 ->count();
-                $data = [
-                    'kodepokok' => 1,
-                    'idanggota' => $idanggota1,
-                    'tglstatus' => $tgltransaksi1,
-                    'nomorstatus' => $nomorbuktia1,
-                    'status' => $status1,
-                    'tglposting' => $tglpostingnya1,
-                    'nomorposting' => $nomorpostingnya1,
-                    'xangsuran' => $xangsuran1,
-                    'created_at' => $created_at1,
-                    'asli' => $totals1,
-                    'pokok' => $totals1,
-                    'email' => auth()->user()->email,
-                    'iduser' => auth()->user()->id,
-                ];
                 if($tampil<>'0'){
-                    Hutang::where('idanggota','=',$idanggota1)
-                    ->where('kodepokok','=',1)
-                    ->where('nomorstatus','=',$nomorbuktia1)->update($data);
+                    $tampil2 = Savings::limit('1')
+                    ->where('idanggota','=',$idanggota1)
+                    ->where('nomorbukti','<>',$nomorbukti1)
+                    ->where('akhir','>','0')
+                    ->orderBy('id','desc')
+                    ->get();
+                    foreach ($tampil2 as $baris){
+                        $awal = $baris->akhir;
+                    }
+                    $tampil3 = Savings::where('idanggota','=',$idanggota1)
+                    ->where('nomorbukti','=',$nomorbukti1)
+                    ->count();
+                        $data3 = [
+                            'idanggota' => $idanggota1,
+                            'tgltransaksi' => $tgltransaksi1,
+                            'nomorbukti' => $nomorbukti1,
+                            'tglposting' => $tglpostingnya1,
+                            'nomorposting' => $nomorpostingnya1,
+                            'awal' => $awal,
+                            'masuk' => $savings1,
+                            'keluar' => $ambilsavings1,
+                            'akhir' => $awal + $savings1 - $ambilsavings1,  
+                            'email' => auth()->user()->email,
+                            'iduser' => auth()->user()->id,                              
+                        ];
+                    if($tampil3<>'0'){
+                        Savings::where('idanggota','=',$idanggota1)
+                        ->where('nomorbukti','=',$nomorbukti1)
+                        ->update($data3);
+                    }else{
+                        Savings::create($data3);
+                    }
+
                 }else{
-                    Hutang::create($data); 
+                    $tampil3 = Savings::where('idanggota','=',$idanggota1)
+                    ->where('nomorbukti','=',$nomorbukti1)
+                    ->count();
+                        $data3 = [
+                            'idanggota' => $idanggota1,
+                            'tgltransaksi' => $tgltransaksi1,
+                            'nomorbukti' => $nomorbukti1,
+                            'tglposting' => $tglpostingnya1,
+                            'nomorposting' => $nomorpostingnya1,
+                            'awal' => 0,
+                            'masuk' => $savings1,
+                            'keluar' => $ambilsavings1,
+                            'akhir' => 0 + $savings1 - $ambilsavings1,  
+                            'email' => auth()->user()->email,
+                            'iduser' => auth()->user()->id,                              
+                        ];
+                    if($tampil3<>'0'){
+                        Savings::create($data3);
+                    }else{
+                        Savings::where('idanggota','=',$idanggota1)
+                        ->where('nomorbukti','=',$nomorbukti1)
+                        ->update($data3);
+                    }
+
                 }
             }
             
@@ -1023,7 +548,7 @@ class BayarhutangController extends Controller
      */
     public function destroy($id)
     {
-        $data = Bkeluar::where('id', '=', $id)->delete();
+        $data = Bayarhutang::where('id', '=', $id)->delete();
         return json_encode(array('data' => $data));
     }
   
@@ -1080,7 +605,9 @@ class BayarhutangController extends Controller
     }
     function listjenispembayaran()
     {
-        $tampil = Jenispembayaran::where('id','<>','0')->get();
+        $tampil = Jenispembayaran::where('id','<>','0')
+        ->where('id','<>','99')
+        ->get();
         foreach ($tampil as $baris) {
             echo "<option value='" . $baris->id . "'>". $baris->jenispembayaran . "</option>";
         }
@@ -1146,12 +673,12 @@ class BayarhutangController extends Controller
         $m1 = Carbon::parse($tglposting1)->format('m');
         $y1 = Carbon::parse($tglposting1)->format('Y');
         
-        $jmldata = Stok::where('tglposting','=',$tglposting1)            
+        $jmldata = Hutang::where('tglposting','=',$tglposting1)            
             ->count();
         if ($jmldata==0){
             $nomor = 1;    
         }else{
-            $nomor = Stok::select('nomorp')
+            $nomor = Hutang::select('nomorp')
                 ->where('tglposting','=',$tglposting1)
                 ->max('nomorp')+1;
         }  
@@ -1224,14 +751,14 @@ class BayarhutangController extends Controller
     public function displaypembayaran($id)
     {
         
-        $tampil = Stok::where('nomorstatus','=',$id)
+        $tampil = Hutang::where('nomorstatus','=',$id)
         ->get();
         $jml = 0;
         foreach ($tampil as $baris) {
             $jml = $jml + $baris->bayars + $baris->vouchers + $baris->ambilsavings;
         }
 
-        $data = Stok::limit(1)
+        $data = Hutang::limit(1)
         ->select('*')
         ->selectRaw('('. $jml .') as jml')
         ->where('nomorstatus','=',$id)        

@@ -64,6 +64,7 @@
                         <th style="width:50px">Diskon Jual(%)</th>
                         <th style="width:100px">Spek</th>
                         <th style="width:50px">Image</th>
+                        <th style="width:50px">Expired</th>
                         <th style="width:200px">Keterangan</th>
                         <th style="width:50px">Action</th>
                     </tr>
@@ -146,7 +147,7 @@
                                             <h6 class="mt-2">Harga Beli</h6>
                                         </div>
                                         <div class="col-md-8">                                
-                                            <input name="hbs1" id="hbs1" class="w3-input w3-border text-right" maxlength="" type="number" placeholder="Harga Beli Satuan" value="{{ old('hbs1') }}">
+                                            <input name="hbs1" id="hbs1" class="w3-input w3-border text-right" type="search" placeholder="Harga Beli Satuan" value="{{ old('hbs1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
                                         </div>								  
                                     </div>      
                                     <div class="row">
@@ -154,7 +155,7 @@
                                             <h6 class="mt-2">Harga Jual</h6>
                                         </div>
                                         <div class="col-md-8">                                
-                                            <input name="hjs1" id="hjs1" class="w3-input w3-border text-right" maxlength="" type="number" placeholder="Harga Jual Satuan" value="{{ old('hjs1') }}">
+                                            <input name="hjs1" id="hjs1" class="w3-input w3-border text-right" type="search" placeholder="Harga Jual Satuan" value="{{ old('hjs1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
                                         </div>								  
                                     </div>      
                                     
@@ -191,6 +192,13 @@
                                         </div>								  
                                     </div>      
                                           
+                                        
+                                </div>
+                                
+                                
+                                {{-- kanan --}}
+                                <div class="col-md-6">
+
                                     <div class="row">
                                         <div class="col-md-4 mt-1" align="right">									
                                             <h6 class="mt-2">Spek</h6>
@@ -198,12 +206,16 @@
                                         <div class="col-md-8">                                
                                             <input name="spek1" id="spek1" class="w3-input w3-border" maxlength="" type="search" placeholder="Spek" value="{{ old('spek1') }}">
                                         </div>								  
-                                    </div>      
-                                </div>
-                                
-                                
-                                {{-- kanan --}}
-                                <div class="col-md-6">
+                                    </div>  
+                                    <div class="row">
+                                        <div class="col-md-4 mt-1" align="right">									
+                                            <h6 class="mt-2">Expired</h6>
+                                        </div>
+                                        <div class="col-md-8">                                
+                                            <input name="expired1" id="expired1" class="w3-input w3-border" maxlength="10" type="search" placeholder="expired" value="{{ old('expired1') }}">
+                                        </div>								  
+                                    </div>  
+                                    
                                     <div class="row">
                                         <div class="col-md-4 mt-1" align="right">									
                                             <h6 class="mt-2">Image</h6>
@@ -436,6 +448,7 @@ $(document).ready(function(){
                 { data: 'diskonjual', name: 'diskonjual' },
                 { data: 'spek', name: 'spek' },
                 { data: 'image', name: 'image' },
+                { data: 'expired', name: 'expired' },
                 { data: 'keterangan', name: 'keterangan' },
                 { data: 'action', name: 'action', className: 'dt-center' },
             ]
@@ -506,6 +519,7 @@ $(document).ready(function(){
         var ppnjual1=$('#ppnjual1').val();
         var diskonjual1=$('#diskonjual1').val();
         var spek1=$('#spek1').val();
+        var expired1=$('#expired1').val();
         const image1 = $('#image1').prop('files')[0];
         var keterangan1=$('#keterangan1').val();
         
@@ -523,6 +537,7 @@ $(document).ready(function(){
             formData.append('ppnjual1', ppnjual1);
             formData.append('diskonjual1', diskonjual1);
             formData.append('spek1', spek1);
+            formData.append('expired1', expired1);
             formData.append('image1', image1);
             formData.append('keterangan1', keterangan1);
           
@@ -603,6 +618,7 @@ $(document).ready(function(){
                         $('#diskonjual1').val(resultData[i].diskonjual);
                         $('#ppnjual1').val(resultData[i].ppnjual);
                         $('#spek1').val(resultData[i].spek);
+                        $('#expired1').val(resultData[i].expired);
                         
                         $('#image1').val('');
 						$('#image1x').val(resultData[i].image);                

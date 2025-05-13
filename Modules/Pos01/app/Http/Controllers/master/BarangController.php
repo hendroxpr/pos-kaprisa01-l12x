@@ -67,12 +67,16 @@ class BarangController extends Controller
     public function create(Request $request)
     {
         $id = $request['id1'];
+        $barcode = $request['barcode1'];     
+
         $slug = Str::slug($request['nabara1']);
 
         $tampil = Barang::where('id', '=', $id)->get();
         foreach ($tampil as $item) {
             $image = $item->image;            
         }
+
+        
 
         if ($id == '0') {
             if ($request->hasFile('image1')) {
@@ -131,6 +135,7 @@ class BarangController extends Controller
             'diskonjual' => $request['diskonjual1'],
             'ppnjual' => $request['ppnjual1'],
             'spek' => $request['spek1'],
+            'expired' => $request['expired1'],
             'image' => $image1,
             'keterangan' => $request['keterangan1'],
         ];
@@ -138,51 +143,66 @@ class BarangController extends Controller
         if ($id == '0') {
             Barang::create($data);
             
-            //ambil barang.id terakhir
-            $tampil = Barang::limit(1)->orderBy('id','desc')->get();
-            foreach ($tampil as $item) {
-                $idx = $item->id;            
-                $barcodex = $item->barcode;            
-                $spekx = $item->spek;            
-            }
+            // //ambil barang.id terakhir
+            // $tampil = Barang::limit(1)->orderBy('id','desc')->get();
+            // foreach ($tampil as $item) {
+            //     $idx = $item->id;            
+            //     $barcodex = $item->barcode;            
+            //     $spekx = $item->spek;            
+            // }
 
-            $databc = [
-                'idbarang' => $idx,
-                'barcode' => $barcodex,
-                'keterangan' => $spekx,
-            ];
+            // $databc = [
+            //     'idbarang' => $idx,
+            //     'barcode' => $barcodex,
+            //     'keterangan' => $spekx,
+            // ];
 
-            //cek tabel barcode
-            $jml = Barcode::where('barcode','=',$barcodex)->count();
-            if($jml=='0'){
-                Barcode::create($databc);
-            }
+            // //cek tabel barcode
+            // $jml = Barcode::where('barcode','=',$barcode)->count();
+            // if($jml=='0'){
+            //     Barcode::create($databc);
+            // }else{
+            //     Barcode::where('barcode','=',$barcodex)->update($databc);
+            // }
 
         } else {
-            //cek barang sebelum update
-            $tampil = Barang::where('id','=', $id)->get();
-            foreach ($tampil as $item) {
-                $barcodex = $item->barcode;            
-            }
+            // //cek barang sebelum update
+            // $tampil = Barang::where('id','=', $id)->get();
+            // foreach ($tampil as $item) {
+            //     $barcodex = $item->barcode;            
+            // }
 
             //update barang
             Barang::where('id', '=', $id)->update($data);
             
-            //cek barcode sebelum update
-            $jml = Barcode::where('barcode','=',$barcodex)                
-                ->count();
-            $databc = [
-                'idbarang' => $id,
-                'barcode' => $validatedData['barcode1'],
-                'keterangan' => $request['spek1'],
-            ];
-            if($jml=='1'){
-                Barcode::where('barcode', '=',$barcodex)->update($databc);
-            }else{
-                Barcode::create($databc);
-            }
+            // //cek barcode setelah update
+            // $jml = Barcode::where('barcode','=',$barcode)                
+            //     ->count();
+            // $databc = [
+            //     'idbarang' => $id,
+            //     'barcode' => $validatedData['barcode1'],
+            //     'keterangan' => $request['spek1'],
+            // ];
+            // if($jml=='0'){
+            //     Barcode::create($databc);
+            // }else{
+            //     Barcode::where('barcode','=',$barcode)->update($databc);
+            // }
 
         }
+
+        // $databc = [
+        //     'idbarang' => $id,
+        //     'barcode' => $barcode,
+        //     'keterangan' => $request['spek1'],
+        // ];
+
+        // $jml = Barcode::where('barcode','=',$barcode)->count();
+        // if($jml==0){
+        //     Barcode::create($databc);
+        // }else{
+        //     Barcode::where('barcode','=',$barcode)->update($databc);
+        // }
 
 
         // return json_encode('data');

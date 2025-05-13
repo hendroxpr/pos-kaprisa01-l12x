@@ -2,7 +2,9 @@
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
-
+use Modules\Pos01\Http\Controllers\laporan\KartustokController;
+use Modules\Pos01\Http\Controllers\laporan\StokkeluarmasukController;
+use Modules\Pos01\Http\Controllers\laporan\StokbarangController;
 use Modules\Pos01\Http\Controllers\pengaturan\ParameterController;
 use Modules\Pos01\Http\Controllers\transaksi\BayarhutangController;
 use Modules\Pos01\Http\Controllers\transaksi\BmasukController;
@@ -182,6 +184,60 @@ Route::get('/transaksi/bayarhutangdisplaypembayaran/{id}', [BayarhutangControlle
 Route::post('/transaksi/bayarhutangupdate', [BayarhutangController::class, 'update'])->name('pos01.transaksi.bayarhutang_update')->middleware('auth'); /* update data bayarhutang */
 Route::post('/transaksi/bayarhutangposting', [BayarhutangController::class, 'posting'])->name('pos01.transaksi.bayarhutang_posting')->middleware('auth'); /* posting data bayarhutang */
 Route::get('/transaksi/bayarhutangdestroy/{id}', [BayarhutangController::class, 'destroy'])->name('pos01.transaksi.bayarhutang_destroy')->middleware('auth'); /* hapus data bayarhutang */
+
+/* laporan - stokbarang */
+Route::get('/laporan/stokbarang', [StokbarangController::class, 'index'])->name('pos01.laporan.stokbarang.index')->middleware('auth'); /* halaman stokbarang */
+Route::get('/laporan/stokbarangshowstokbarang', [StokbarangController::class, 'showstokbarang'])->name('pos01.laporan.stokbarang_showstokbarang')->middleware('auth'); /* menampilkan data stokbarang pada datatable javascript */
+Route::get('/laporan/stokbarangshowstokfifo', [StokbarangController::class, 'showstokfifo'])->name('pos01.laporan.stokbarang_showstokfifo')->middleware('auth'); /* menampilkan data stokfifo pada datatable javascript */
+Route::get('/laporan/stokbarangshowstokmova', [StokbarangController::class, 'showstokmova'])->name('pos01.laporan.stokbarang_showstokmova')->middleware('auth'); /* menampilkan data stokmova pada datatable javascript */
+Route::get('/laporan/stokbarangshowstoklifo', [StokbarangController::class, 'showstoklifo'])->name('pos01.laporan.stokbarang_showstoklifo')->middleware('auth'); /* menampilkan data stoklifo pada datatable javascript */
+Route::get('/laporan/stokbarangshowstokexpired', [StokbarangController::class, 'showstokexpired'])->name('pos01.laporan.stokbarang_showstokexpired')->middleware('auth'); /* menampilkan data stokexpired pada datatable javascript */
+Route::get('/laporan/stokbarangshowstokmin', [StokbarangController::class, 'showstokmin'])->name('pos01.laporan.stokbarang_showstokmin')->middleware('auth'); /* menampilkan data stokmin pada datatable javascript */
+Route::get('/laporan/stokbarangshowstokmax', [StokbarangController::class, 'showstokmax'])->name('pos01.laporan.stokbarang_showstokmax')->middleware('auth'); /* menampilkan data stokmax pada datatable javascript */
+Route::get('/laporan/stokbarangshowstokhabis', [StokbarangController::class, 'showstokhabis'])->name('pos01.laporan.stokbarang_showstokhabis')->middleware('auth'); /* menampilkan data stokhabis pada datatable javascript */
+Route::get('/laporan/stokbarangshowbarang', [StokbarangController::class, 'showbarang'])->name('pos01.laporan.stokbarang_showbarang')->middleware('auth'); /* menampilkan data barang yg gk ada di stokbarang pada datatable javascript */
+Route::get('/laporan/stokbaranglistbarang', [StokbarangController::class, 'listbarang'])->name('pos01.laporan.stokbarang_listbarang')->middleware('auth'); /* menampilkan list barang */
+Route::get('/laporan/stokbaranglistruang', [StokbarangController::class, 'listruang'])->name('pos01.laporan.stokbarang_listruang')->middleware('auth'); /* menampilkan list ruang */
+Route::post('/laporan/stokbarangcreate', [StokbarangController::class, 'create'])->name('pos01.laporan.stokbarang_create')->middleware('auth'); /* menambah stokbarang */
+Route::post('/laporan/stokbarangkirimsyarat', [StokbarangController::class, 'kirimsyarat'])->name('pos01.laporan.stokbarang_kirimsyarat')->middleware('auth'); /* kirimsyarat */
+Route::get('/laporan/stokbarangedit/{id}', [StokbarangController::class, 'edit'])->name('pos01.laporan.stokbarang_edit')->middleware('auth'); /* menampilkan data yang akan dirubah */
+Route::get('/laporan/stokbarangdestroy/{id}', [StokbarangController::class, 'destroy'])->name('pos01.laporan.stokbarang_destroy')->middleware('auth'); /* hapus data stokbarang */
+
+/* laporan - stokkeluarmasuk */
+Route::get('/laporan/stokkeluarmasuk', [StokkeluarmasukController::class, 'index'])->name('pos01.laporan.stokkeluarmasuk.index')->middleware('auth'); /* halaman stokkeluarmasuk */
+Route::get('/laporan/stokkeluarmasukshowstokmasuk', [StokkeluarmasukController::class, 'showstokmasuk'])->name('pos01.laporan.stokkeluarmasuk_showstokmasuk')->middleware('auth'); /* menampilkan data stokmsduk pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokmasukfifo', [StokkeluarmasukController::class, 'showstokmasukfifo'])->name('pos01.laporan.stokkeluarmasuk_showstokmasukfifo')->middleware('auth'); /* menampilkan data stokmasukfifo pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokmasukmova', [StokkeluarmasukController::class, 'showstokmasukmova'])->name('pos01.laporan.stokkeluarmasuk_showstokmasukmova')->middleware('auth'); /* menampilkan data stokmasukmova pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokmasuklifo', [StokkeluarmasukController::class, 'showstokmasuklifo'])->name('pos01.laporan.stokkeluarmasuk_showstokmasuklifo')->middleware('auth'); /* menampilkan data stokmasuklifo pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokkeluar', [StokkeluarmasukController::class, 'showstokkeluar'])->name('pos01.laporan.stokkeluarmasuk_showstokkeluar')->middleware('auth'); /* menampilkan data stokkeluar pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokkeluarfifo', [StokkeluarmasukController::class, 'showstokkeluarfifo'])->name('pos01.laporan.stokkeluarmasuk_showstokkeluarfifo')->middleware('auth'); /* menampilkan data stokkeluarfifo pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokkeluarmova', [StokkeluarmasukController::class, 'showstokkeluarmova'])->name('pos01.laporan.stokkeluarmasuk_showstokkeluarmova')->middleware('auth'); /* menampilkan data stokkeluarmova pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokkeluarlifo', [StokkeluarmasukController::class, 'showstokkeluarlifo'])->name('pos01.laporan.stokkeluarmasuk_showstokkeluarlifo')->middleware('auth'); /* menampilkan data stokkeluarlifo pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokrekap', [StokkeluarmasukController::class, 'showstokrekap'])->name('pos01.laporan.stokkeluarmasuk_showstokrekap')->middleware('auth'); /* menampilkan data stokrekap pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokrekapfifo', [StokkeluarmasukController::class, 'showstokrekapfifo'])->name('pos01.laporan.stokkeluarmasuk_showstokrekapfifo')->middleware('auth'); /* menampilkan data stokrekapfifo pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokrekapmova', [StokkeluarmasukController::class, 'showstokrekapmova'])->name('pos01.laporan.stokkeluarmasuk_showstokrekapmova')->middleware('auth'); /* menampilkan data stokrekapmova pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowstokrekaplifo', [StokkeluarmasukController::class, 'showstokrekaplifo'])->name('pos01.laporan.stokkeluarmasuk_showstokrekaplifo')->middleware('auth'); /* menampilkan data stokrekaplifo pada datatable javascript */
+Route::get('/laporan/stokkeluarmasukshowbarang', [StokkeluarmasukController::class, 'showbarang'])->name('pos01.laporan.stokkeluarmasuk_showbarang')->middleware('auth'); /* menampilkan data barang yg gk ada di stokkeluarmasuk pada datatable javascript */
+Route::get('/laporan/stokkeluarmasuklistbarang', [StokkeluarmasukController::class, 'listbarang'])->name('pos01.laporan.stokkeluarmasuk_listbarang')->middleware('auth'); /* menampilkan list barang */
+Route::get('/laporan/stokkeluarmasuklistruang', [StokkeluarmasukController::class, 'listruang'])->name('pos01.laporan.stokkeluarmasuk_listruang')->middleware('auth'); /* menampilkan list ruang */
+Route::post('/laporan/stokkeluarmasukcreate', [StokkeluarmasukController::class, 'create'])->name('pos01.laporan.stokkeluarmasuk_create')->middleware('auth'); /* menambah stokkeluarmasuk */
+Route::post('/laporan/stokkeluarmasukkirimsyarat', [StokkeluarmasukController::class, 'kirimsyarat'])->name('pos01.laporan.stokkeluarmasuk_kirimsyarat')->middleware('auth'); /* kirimsyarat */
+Route::get('/laporan/stokkeluarmasukedit/{id}', [StokkeluarmasukController::class, 'edit'])->name('pos01.laporan.stokkeluarmasuk_edit')->middleware('auth'); /* menampilkan data yang akan dirubah */
+Route::get('/laporan/stokkeluarmasukdestroy/{id}', [StokkeluarmasukController::class, 'destroy'])->name('pos01.laporan.stokkeluarmasuk_destroy')->middleware('auth'); /* hapus data stokkeluarmasuk */
+
+/* laporan - kartustok */
+Route::get('/laporan/kartustok', [KartustokController::class, 'index'])->name('pos01.laporan.kartustok.index')->middleware('auth'); /* halaman kartustok */
+Route::get('/laporan/kartustokshowstokrekap', [KartustokController::class, 'showstokrekap'])->name('pos01.laporan.kartustok_showstokrekap')->middleware('auth'); /* menampilkan data stokrekap pada datatable javascript */
+Route::get('/laporan/kartustokshowstokrekapfifo', [KartustokController::class, 'showstokrekapfifo'])->name('pos01.laporan.kartustok_showstokrekapfifo')->middleware('auth'); /* menampilkan data stokrekapfifo pada datatable javascript */
+Route::get('/laporan/kartustokshowstokrekapmova', [KartustokController::class, 'showstokrekapmova'])->name('pos01.laporan.kartustok_showstokrekapmova')->middleware('auth'); /* menampilkan data stokrekapmova pada datatable javascript */
+Route::get('/laporan/kartustokshowstokrekaplifo', [KartustokController::class, 'showstokrekaplifo'])->name('pos01.laporan.kartustok_showstokrekaplifo')->middleware('auth'); /* menampilkan data stokrekaplifo pada datatable javascript */
+Route::get('/laporan/kartustokshowbarang', [KartustokController::class, 'showbarang'])->name('pos01.laporan.kartustok_showbarang')->middleware('auth'); /* menampilkan data barang yg gk ada di kartustok pada datatable javascript */
+Route::get('/laporan/kartustoklistbarang', [KartustokController::class, 'listbarang'])->name('pos01.laporan.kartustok_listbarang')->middleware('auth'); /* menampilkan list barang */
+Route::get('/laporan/kartustoklistruang', [KartustokController::class, 'listruang'])->name('pos01.laporan.kartustok_listruang')->middleware('auth'); /* menampilkan list ruang */
+Route::post('/laporan/kartustokcreate', [KartustokController::class, 'create'])->name('pos01.laporan.kartustok_create')->middleware('auth'); /* menambah kartustok */
+Route::post('/laporan/kartustokkirimsyarat', [KartustokController::class, 'kirimsyarat'])->name('pos01.laporan.kartustok_kirimsyarat')->middleware('auth'); /* kirimsyarat */
+Route::get('/laporan/kartustokedit/{id}', [KartustokController::class, 'edit'])->name('pos01.laporan.kartustok_edit')->middleware('auth'); /* menampilkan data yang akan dirubah */
+Route::get('/laporan/kartustokdestroy/{id}', [KartustokController::class, 'destroy'])->name('pos01.laporan.kartustok_destroy')->middleware('auth'); /* hapus data kartustok */
 
 /* pengaturan - parameter */
 Route::get('/pengaturan/parameter', [ParameterController::class, 'index'])->name('pos01.pengaturan.parameter.index')->middleware('auth'); /* halaman parameter */

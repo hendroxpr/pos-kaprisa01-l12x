@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Menusub;
+use Modules\Pos01\Models\Hutang;
 use Modules\Pos01\Models\Lembaga;
 use Modules\Pos01\Models\Savings;
 use Yajra\DataTables\Facades\DataTables;
@@ -159,8 +160,12 @@ class AnggotaController extends Controller
         }else{
             $saldo=0;
         }
+
+        $saldohutang = Hutang::where('idanggota','=',$id)->sum('pokok');
+
         $data = Anggota::select('*')
         ->selectRaw('('. $saldo .') as akhir')
+        ->selectRaw('('. $saldohutang .') as saldohutang')
         ->with('lembaga')->where('id', '=', $id)  
         ->get();
         return json_encode(array('data' => $data)); 

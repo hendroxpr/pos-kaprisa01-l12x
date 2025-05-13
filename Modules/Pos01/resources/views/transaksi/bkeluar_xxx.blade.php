@@ -1318,7 +1318,7 @@ $(document).ready(function(){
             displaypembayaran(nomorbuktia1);
 
     }
-   
+
     function displaypembayaran(idx){
         var id1=idx;
         
@@ -1368,7 +1368,7 @@ $(document).ready(function(){
                     }
                 },
                 error : function(data){
-                    alert('salah');
+                    
                 }
             }); 
     }
@@ -1827,22 +1827,18 @@ $(document).ready(function(){
         let k1 = y.length;
         let k2 = z.length;
         let k3 = j.length;
-        let nama1 = $("#nama1").val(); 
-        let nama2 = nama1.trim();
+
         if(w=='KLR'&&b==z&&k1=='3'&&k3=='4'){
-            if(nama2==''){
-                swalpelanggankosong();
-            }else{
-                btn_baru_click();        
-                $("#iconx").removeClass("fas fa-edit");
-                $("#iconx").addClass("fas fa-plus-square");
-                $("#modalx").removeClass("modal-content bg-success w3-animate-zoom");
-                $("#modalx").addClass("modal-content bg-primary w3-animate-zoom");
-                document.getElementById("btn_simpan").disabled = false;
-                $('#ModalAdd').modal('show');
-                $('#id1').val('0');
-                $('#judulx').html(' Tambah Data');
-            }
+            btn_baru_click();
+        
+            $("#iconx").removeClass("fas fa-edit");
+            $("#iconx").addClass("fas fa-plus-square");
+            $("#modalx").removeClass("modal-content bg-success w3-animate-zoom");
+            $("#modalx").addClass("modal-content bg-primary w3-animate-zoom");
+            document.getElementById("btn_simpan").disabled = false;
+            $('#ModalAdd').modal('show');
+            $('#id1').val('0');
+            $('#judulx').html(' Tambah Data');
         
         }else{
             swalnomorbuktisalah(x);
@@ -2065,7 +2061,8 @@ $(document).ready(function(){
             }else{
                 
                 setTimeout(() => {
-                    displaypembayaran(nomorbuktia1);                    
+                    displaypembayaran(nomorbuktia1);
+                    
                 }, 100);
 
                 setTimeout(() => {
@@ -2690,16 +2687,7 @@ $(document).ready(function(){
         Swal.fire({
             icon: 'error',
             title: 'Oops...Nomor Bukti "' + x + '" ilegal !',
-            html: '<p>Klik Generate Nomor Bukti ( <i style="font-size:24" class="fa">&#xf013;</i> )</p>',
-            timer:5000
-        })
-    }
-
-    function swalpelanggankosong(){
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...Nama pelanggan belum dipilih',
-            html: '<p>Isi kolom search atau Klik <i style="font-size:24" class="fas">&#xf002;</i></p>',
+            text: 'Klik Generate Nomor Bukti (icon gear)',
             timer:5000
         })
     }

@@ -155,6 +155,7 @@
                     </div>
                     <div class="col-md-7">
                         <input name="saldo1" id="saldo1" class="w3-input w3-border" maxlength="50" type="text" placeholder="Saldo" value="{{ $saldo }}"  readonly>                       
+                        <input name="saldosaving1" id="saldosaving1" class="w3-input w3-border" maxlength="50" type="hidden" placeholder="Saldo" value="{{ old('saldosaving1') }}"  readonly>                       
                     </div>
                 </div>
                 
@@ -561,7 +562,7 @@
                                     <h4 class="mt-2">PPN</h4>
                                 </div>                                						  
                                 <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
-                                    <input name="ppns1" id="ppns1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('ppns1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                    <input name="ppns1" id="ppns1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="" value="{{ old('ppns1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
                                 </div>  								  
                             </div> 			
                                          
@@ -570,7 +571,7 @@
                                     <h4 class="mt-2">Diskon</h4>
                                 </div>							  
                                 <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
-                                    <input name="diskons1" id="diskons1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('diskons1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                    <input name="diskons1" id="diskons1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="" value="{{ old('diskons1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
                                 </div>								  
                             </div>  			
                             
@@ -628,33 +629,10 @@
                                 </div>                                								  
                                 <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
                                     <select name="idjenispembayaran1" id="idjenispembayaran1" class="w3-input w3-border" style=" background-color: aqua;"></select>
+                                    <input name="jmls1" id="jmls1" class="" type="hidden">
+                                    
                                 </div>								  
                             </div>
-                            <div class="row">
-                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
-                                    <h4 class="mt-2" name="judulkali1" id="judulkali1">Angsuran (X)</h4>
-                                </div>                                								  
-                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
-                                    <input name="jmls1" id="jmls1" class="" type="hidden">
-                                    <input name="kali1" id="kali1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="number" min="1" max="60" placeholder="" value="1">
-                                </div>								  
-                            </div>  
-                            <div class="row">
-                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
-                                    <h4 class="mt-2" name="judulpersenjasa1" id="judulpersenjasa1">% Jasa</h4>
-                                </div>                                								  
-                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
-                                    <input name="persenjasa1" id="persenjasa1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="persen jasa" value="0.00" onkeypress="return hanyaAngkaTitik(event)">
-                                </div>								  
-                            </div>  
-                            <div class="row">
-                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
-                                    <h4 class="mt-2" name="judulnilaihutang1" id="judulnilaihutang1">Nilai Hutang</h4>
-                                </div>                                								  
-                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
-                                    {{-- <input name="nilaihutang1" id="nilaihutang1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="nilai hutang" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"> --}}
-                                </div>								  
-                            </div>  
                             
                         </div>
                         {{-- <div class="col-md-6">
@@ -802,15 +780,6 @@ $(document).ready(function(){
         $('#tglposting5').text(tglsekarang);
     }
 
-   setTimeout(() => {
-    document.getElementById('kali1').setAttribute("hidden","hidden");
-    document.getElementById('judulkali1').setAttribute("hidden","hidden");    
-    document.getElementById('persenjasa1').setAttribute("hidden","hidden");
-    document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");    
-    // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
-    document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");    
-   }, 1000);
-
     
     //menampilkan combo hutang
     function tampil_listhutang(){				
@@ -853,7 +822,7 @@ $(document).ready(function(){
     function tampil_listjenispembayaran(){				
         $.ajax({
             type: 'get',
-            url   : '{{route('pos01.transaksi.bkeluar_listjenispembayaran')}}',
+            url   : '{{route('pos01.transaksi.bayarhutang_listjenispembayaran')}}',
             
             success: function(data){				    
                 $("#idjenispembayaran1").html(data);                
@@ -936,6 +905,9 @@ $(document).ready(function(){
                                 aksi +
                             '</tr>';
 
+                            $('#nomorpostingnya1').val(resultData[i].nomorposting);            
+                            $('#tglpostingnya1').val(resultData[i].tglposting);
+
                 }
 
                 $('#show_data').html(html); 
@@ -943,6 +915,7 @@ $(document).ready(function(){
                 $('#totalsaldo1').text(formatAngka(jumlahx,''));
                 $('#totalnilai5').text(formatAngka(jumlahx,''));
                 $('#displaysubtotal1').text($('#totalsaldo1').text());
+                $('#subtotals1').val(formatAngka(jumlahx,''));
 
                 $('#totals1').val(formatAngka(jumlahx,''));
                 if(i=='0'){
@@ -1243,7 +1216,8 @@ $(document).ready(function(){
                         $('#ktp1').val(resultData[i].ktp);
                         $('#nama1').val(resultData[i].nama);
                         $('#lembaga1').val(resultData[i].lembaga.lembaga);
-                        $('#saldo1').val(resultData[i].akhir);
+                        $('#saldo1').val(formatAngka(resultData[i].saldohutang,''));
+                        $('#saldosaving1').val(resultData[i].akhir);
                     }
                     
                 },
@@ -1260,47 +1234,37 @@ $(document).ready(function(){
         
             $.ajax({
                 type  : 'get',
-                url   : `{{ url('pos01/transaksi/bkeluardisplaypembayaran//')}}/${id1}`,
+                url   : `{{ url('pos01/transaksi/bayarhutangdisplaypembayaran//')}}/${id1}`,
                 async : false,
                 dataType : 'json',	
                 
                 success : function(data){
                     
-                    var i;                
+                    var i;
                     var resultData = data.data;	                			
                     for(i=0; i<resultData.length; i++){
+                        $('#subtotals1').val(formatAngka(resultData[i].subtotals,''));  
+                        $('#ppns1').val(formatAngka(resultData[i].ppns,''));  
+                        $('#diskons1').val(formatAngka(resultData[i].diskons,''));  
+                        $('#totals1').val(formatAngka(resultData[i].totals,''));  
                         $('#bayars1').val(formatAngka(resultData[i].bayars,''));  
                         $('#vouchers1').val(formatAngka(resultData[i].vouchers,''));  
                         $('#ambilsavings1').val(formatAngka(resultData[i].ambilsavings,''));  
                         $('#kembalis1').val(formatAngka(resultData[i].kembalis,''));  
-                        $('#savings1').val(formatAngka(resultData[i].savings,''));  
+                        $('#savings1').val(formatAngka(resultData[i].savings,''));
+                        $('#jmls1').val(resultData[i].jml);  
                         $('#idjenispembayaran1').val(formatAngka(resultData[i].idjenispembayaran,''));  
-                        $('#kali1').val(resultData[i].xangsuran);  
-                        $('#jmls1').val(resultData[i].jml); 
-                        $('#persenjasa1').val(resultData[i].persenjasa); 
-                        $('#nilaihutang1').val(formatAngka(resultData[i].nilaihutang,'')); 
-
-                        setTimeout(() => {
-                            var x =parseFloat($("#idjenispembayaran1").val());
-                            if(x=='99'){
-                                document.getElementById('kali1').removeAttribute("hidden");
-                                document.getElementById('judulkali1').removeAttribute("hidden");
-                                document.getElementById('persenjasa1').removeAttribute("hidden");
-                                document.getElementById('judulpersenjasa1').removeAttribute("hidden");
-                                // document.getElementById('nilaihutang1').removeAttribute("hidden");
-                                document.getElementById('judulnilaihutang1').removeAttribute("hidden");
-                            }else{
-                               
-                                document.getElementById('kali1').setAttribute("hidden","hidden");
-                                document.getElementById('judulkali1').setAttribute("hidden","hidden");
-                                document.getElementById('persenjasa1').setAttribute("hidden","hidden");
-                                document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");
-                                // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
-                                document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");
-                            }
-                            
-                        }, 100);
-
+                         
+                        if(resultData[i].subtotals=='0'){
+                            $('#subtotals1').val($('#displaysubtotal1').text());
+                        }
+                        if(resultData[i].totals=='0'){
+                            $('#totals1').val($('#displaysubtotal1').text());
+                        }
+                        if(resultData[i].idjenispembayaran=='0'){
+                            $('#idjenispembayaran1').val('1');
+                        }
+                        
                     }
                 },
                 error : function(data){
@@ -1309,32 +1273,7 @@ $(document).ready(function(){
             }); 
     }
 
-    function lihatpersen(idx){
-        var id1=idx;
-        
-            $.ajax({
-                type  : 'get',
-                url   : `{{ url('pos01/transaksi/bkeluarlihatpersen//')}}/${id1}`,
-                async : false,
-                dataType : 'json',	
-                
-                success : function(data){
-                    
-                    var i;                
-                    var resultData = data.data;	                			
-                    for(i=0; i<resultData.length; i++){
-                        $('#persenjasa1').val(resultData[i].jasahutangbarang);                         
-
-                        setTimeout(() => {
-                            $('#persenjasa1').keydown();
-                        }, 500);
-                    }
-                },
-                error : function(data){
-                    
-                }
-            }); 
-    }
+    
     
     $("#tgltransaksi1").datepicker({
            dateFormat  : "yy-mm-dd",
@@ -1691,7 +1630,7 @@ $(document).ready(function(){
         $.ajax({
             enctype: 'multipart/form-data',
             type   : 'post',
-            url    : '{{route('pos01.transaksi.bkeluar_nomorposting')}}',
+            url    : '{{route('pos01.transaksi.bayarhutang_nomorposting')}}',
             async : false,
             dataType : 'json',
             // data : FormData,
@@ -1721,12 +1660,14 @@ $(document).ready(function(){
         $('#judulx').html(' Edit Data');
         btn_edit_click();
 
+        tampil_listhutang();
+        tampil_listhutangx();
+
         var id1=$(this).attr('data');
 
         $('#id1').val(id1);
         data_edit(id1);
-        tampil_listhutang();
-        tampil_listhutangx();
+        
         $('#ModalAdd').modal('show');         
     });
 
@@ -1750,12 +1691,13 @@ $(document).ready(function(){
                     var resultData = data.data;	                			
                     for(i=0; i<resultData.length; i++){
                         idhutang = resultData[i].idhutang;
-                        idhutang1 = resultData[i].idhutang;;
+                        idhutang1 = resultData[i].idhutang;
                         
-                        $('#idhutang1').val(idhutang);
                         $('#bayar1').val(formatAngka(resultData[i].bayar,''));
-                        $('#keterangan1').val(idhutang);
-                        $('#idhutang1').text('ddddddd');
+                        $('#keterangan1').val(resultData[i].keterangan);
+                        setTimeout(() => {
+                            $('#idhutang1').val(idhutang);
+                        }, 50);
                         displayhutang(idhutang);
                         $('#bayar1').change();
                     }
@@ -1785,37 +1727,21 @@ $(document).ready(function(){
             if(b1==''){
                 swaldatakosong('- Data belum diposting -');
                 // $("#ModalPembayaran").modal('show');
-            }else{
-                
+            }else{                
                 setTimeout(() => {
                     displaypembayaran(nomorbukti1);
-                    
                 }, 100);
-
-                setTimeout(() => {
-                    var x =parseFloat($("#idjenispembayaran1").val());
-                    if(x=='99'){
-                        document.getElementById('kali1').removeAttribute("hidden");
-                        document.getElementById('judulkali1').removeAttribute("hidden");
-                        document.getElementById('persenjasa1').removeAttribute("hidden");
-                        document.getElementById('judulpersenjasa1').removeAttribute("hidden");
-                        // document.getElementById('nilaihutang1').removeAttribute("hidden");
-                        document.getElementById('judulnilaihutang1').removeAttribute("hidden");
-                    }else{
-                        $("#kali1").val('1');
-                        document.getElementById('kali1').setAttribute("hidden","hidden");
-                        document.getElementById('judulkali1').setAttribute("hidden","hidden");
-                        document.getElementById('persenjasa1').setAttribute("hidden","hidden");
-                        document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");
-                        // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
-                        document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");
-                    }
-                    $("#ModalPembayaran").modal('show');
-                }, 100);
+                $("#ModalPembayaran").modal('show');
+                document.getElementById('kembalis1').setAttribute("style","background-color:red");
+                document.getElementById('savings1').setAttribute("style","background-color:red");
+                
             }
        }
+
+
        
     });
+
 
     $("#bayar1").on('change',function(){
         var saldohutang1=parseFloat($('#saldohutang1').val().replace(/[^,\d]/g, '').toString()); 
@@ -1845,25 +1771,179 @@ $(document).ready(function(){
         $("#sisasaldo1").val(sisasaldo1);
     });
 
+    $("#ppns1").on('change',function(){
+        if($("#subtotals1").val()==''){
+            $("#subtotals1").val('0');
+        }
+        var subtotals1=parseFloat($('#subtotals1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#ppns1").val()==''){
+            $("#ppns1").val('0');
+        }
+        var ppns1=parseFloat($('#ppns1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#diskons1").val()==''){
+            $("#diskons1").val('0');
+        }
+        var diskons1=parseFloat($('#diskons1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if(ppns1>=20/100*subtotals1){
+            var ppns1 = parseFloat(20/100*subtotals1);
+            var totals1 = subtotals1 + ppns1 - diskons1;
+            setTimeout(() => {                
+                $("#ppns1").val(formatAngka(ppns1,''));
+            }, 10);
+        }
+        var totals1 = subtotals1 +  ppns1 -  diskons1;    
+        $("#totals1").val(formatAngka(totals1,''));
+        $("#bayars1").change();
+    });
+    $("#ppns1").on('keydown',function(){
+        if($("#subtotals1").val()==''){
+            $("#subtotals1").val('0');
+        }
+        var subtotals1=parseFloat($('#subtotals1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#ppns1").val()==''){
+            $("#ppns1").val('0');
+        }
+        var ppns1=parseFloat($('#ppns1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#diskons1").val()==''){
+            $("#diskons1").val('0');
+        }
+        var diskons1=parseFloat($('#diskons1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if(ppns1>=20/100*subtotals1){
+            var ppns1 = parseFloat(20/100*subtotals1);
+            var totals1 = subtotals1 + ppns1 - diskons1;
+            setTimeout(() => {                
+                $("#ppns1").val(formatAngka(ppns1,''));
+            }, 10);
+        }
+        var totals1 = subtotals1 +  ppns1 -  diskons1;    
+        $("#totals1").val(formatAngka(totals1,''));
+        $("#bayars1").change();
+    });
+    $("#diskons1").on('change',function(){
+        if($("#subtotals1").val()==''){
+            $("#subtotals1").val('0');
+        }
+        var subtotals1=parseFloat($('#subtotals1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#ppns1").val()==''){
+            $("#ppns1").val('0');
+        }
+        var ppns1=parseFloat($('#ppns1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#diskons1").val()==''){
+            $("#diskons1").val('0');
+        }
+        var diskons1=parseFloat($('#diskons1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if(diskons1>=100/100*subtotals1){
+            var diskons1 = parseFloat(100/100*subtotals1);
+            var totals1 = subtotals1 + ppns1 - diskons1;
+            setTimeout(() => {                
+                $("#diskons1").val(formatAngka(diskons1,''));
+            }, 10);
+        }
+        var totals1 = subtotals1 +  ppns1 -  diskons1;    
+        $("#totals1").val(formatAngka(totals1,''));
+        $("#bayars1").change();
+    });
+    $("#diskons1").on('keydown',function(){
+        if($("#subtotals1").val()==''){
+            $("#subtotals1").val('0');
+        }
+        var subtotals1=parseFloat($('#subtotals1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#ppns1").val()==''){
+            $("#ppns1").val('0');
+        }
+        var ppns1=parseFloat($('#ppns1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if($("#diskons1").val()==''){
+            $("#diskons1").val('0');
+        }
+        var diskons1=parseFloat($('#diskons1').val().replace(/[^,\d]/g, '').toString()); 
+        
+        if(diskons1>=100/100*subtotals1){
+            var diskons1 = parseFloat(100/100*subtotals1);
+            var totals1 = subtotals1 + ppns1 - diskons1;
+            setTimeout(() => {                
+                $("#diskons1").val(formatAngka(diskons1,''));
+            }, 10);
+        }
+        var totals1 = subtotals1 +  ppns1 -  diskons1;    
+        $("#totals1").val(formatAngka(totals1,''));
+        $("#bayars1").change();    
+    });
+
     $("#bayars1").on('change',function(){
-        var saldohutang1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
+        if($("#totals1").val()==''){
+            $("#totals1").val('0');
+        }
+        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
+
         if($("#bayars1").val()==''){
             $("#bayars1").val('0');
         }
-
+        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
 
         if($("#vouchers1").val()==''){
             $("#vouchers1").val('0');
         }
+        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#ambilsavings1").val()==''){
             $("#ambilsavings1").val('0');
         }
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());        
-        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString());        
-        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
-        var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;  
-        if(kembalix>'0'){
+        
+        var bayarx = bayars1 + vouchers1 + ambilsavings1;
+        var kembalix = bayarx - totals1; 
+        if(kembalix>='0'){
+            document.getElementById('kembalis1').setAttribute("style","background-color:white");
+            document.getElementById('savings1').setAttribute("style","background-color:white");
+            $("#btn_proses").prop("disabled",false);
+        }else{
+            document.getElementById('kembalis1').setAttribute("style","background-color:red");
+            document.getElementById('savings1').setAttribute("style","background-color:red");
+            $("#btn_proses").prop("disabled",true);
+            $("#btn_cetak").prop("disabled",true);
+        } 
+        var kembali500 = floorn(kembalix,500);        
+        $('#kembalis1').val(formatAngka(kembali500,''));
+        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());
+        var savingx = kembalix - kembali500;
+        $('#savings1').val(formatAngka(savingx,''));
+    });
+
+    $("#bayars1").on('keydown',function(){
+        if($("#totals1").val()==''){
+            $("#totals1").val('0');
+        }
+        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
+
+        if($("#bayars1").val()==''){
+            $("#bayars1").val('0');
+        }
+        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
+
+        if($("#vouchers1").val()==''){
+            $("#vouchers1").val('0');
+        }
+        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString()); 
+
+        if($("#ambilsavings1").val()==''){
+            $("#ambilsavings1").val('0');
+        }
+        var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
+        
+        var bayarx = bayars1 + vouchers1 + ambilsavings1;
+        var kembalix = bayarx - totals1; 
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -1872,64 +1952,37 @@ $(document).ready(function(){
             document.getElementById('savings1').setAttribute("style","background-color:red");
             $("#btn_proses").prop("disabled",true);
         } 
-        var kembali500 = floorn(kembalix,500);
-        
+        var kembali500 = floorn(kembalix,500);        
         $('#kembalis1').val(formatAngka(kembali500,''));
-
-        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());        
-        
-        
-    });
-    $("#bayars1").on('keydown',function(){
-        if($("#bayars1").val()==''){
-            $("#bayars1").val('0');
-        }
-        if($("#vouchers1").val()==''){
-            $("#vouchers1").val('0');
-        }
-        if($("#ambilsavings1").val()==''){
-            $("#ambilsavings1").val('0');
-        }
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());        
-        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString());        
-        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
-        var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
-        var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1; 
-        if(kembalix>'0'){
-            document.getElementById('kembalis1').setAttribute("style","background-color:white");
-            document.getElementById('savings1').setAttribute("style","background-color:white");
-            $("#btn_proses").prop("disabled",false);
-        }else{
-            document.getElementById('kembalis1').setAttribute("style","background-color:red");
-            document.getElementById('savings1').setAttribute("style","background-color:red");
-            $("#btn_proses").prop("disabled",true);
-        }  
-        var kembali500 = floorn(kembalix,500);
-        var savings1 = kembalix - kembali500;
-
-        $('#kembalis1').val(formatAngka(kembali500,''));
-        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString()); 
-
-        $('#savings1').val(formatAngka(savings1,''));
-        var savings1=parseFloat($('#savings1').val().replace(/[^,\d]/g, '').toString());        
+        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());
+        var savingx = kembalix - kembali500;
+        $('#savings1').val(formatAngka(savingx,''));        
     });
 
     $("#vouchers1").on('change',function(){
+        if($("#totals1").val()==''){
+            $("#totals1").val('0');
+        }
+        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
+
         if($("#bayars1").val()==''){
             $("#bayars1").val('0');
         }
+        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#vouchers1").val()==''){
             $("#vouchers1").val('0');
         }
+        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#ambilsavings1").val()==''){
             $("#ambilsavings1").val('0');
         }
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());        
-        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString());        
-        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
-        var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        
+        var bayarx = bayars1 + vouchers1 + ambilsavings1;
+        var kembalix = bayarx - totals1; 
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -1937,33 +1990,37 @@ $(document).ready(function(){
             document.getElementById('kembalis1').setAttribute("style","background-color:red");
             document.getElementById('savings1').setAttribute("style","background-color:red");
             $("#btn_proses").prop("disabled",true);
-        }    
-        var kembali500 = floorn(kembalix,500);
-        var savings1 = kembalix - kembali500;
-
+        } 
+        var kembali500 = floorn(kembalix,500);        
         $('#kembalis1').val(formatAngka(kembali500,''));
-        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString()); 
-
-        $('#savings1').val(formatAngka(savings1,''));
-        var savings1=parseFloat($('#savings1').val().replace(/[^,\d]/g, '').toString());        
-        
+        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());
+        var savingx = kembalix - kembali500;
+        $('#savings1').val(formatAngka(savingx,''));
     });
     $("#vouchers1").on('keydown',function(){
+        if($("#totals1").val()==''){
+            $("#totals1").val('0');
+        }
+        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
+
         if($("#bayars1").val()==''){
             $("#bayars1").val('0');
         }
+        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#vouchers1").val()==''){
             $("#vouchers1").val('0');
         }
+        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#ambilsavings1").val()==''){
             $("#ambilsavings1").val('0');
         }
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());        
-        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString());        
-        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
-        var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        
+        var bayarx = bayars1 + vouchers1 + ambilsavings1;
+        var kembalix = bayarx - totals1; 
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -1971,41 +2028,45 @@ $(document).ready(function(){
             document.getElementById('kembalis1').setAttribute("style","background-color:red");
             document.getElementById('savings1').setAttribute("style","background-color:red");
             $("#btn_proses").prop("disabled",true);
-        }  
-        var kembali500 = floorn(kembalix,500);
-        var savings1 = kembalix - kembali500;
-
+        } 
+        var kembali500 = floorn(kembalix,500);        
         $('#kembalis1').val(formatAngka(kembali500,''));
-        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString()); 
-
-        $('#savings1').val(formatAngka(savings1,''));
-        var savings1=parseFloat($('#savings1').val().replace(/[^,\d]/g, '').toString());        
+        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());
+        var savingx = kembalix - kembali500;
+        $('#savings1').val(formatAngka(savingx,''));       
     });
 
     $("#ambilsavings1").on('change',function(){
-        
-        var saldo1=parseFloat($('#saldo1').val().replace(/[^,\d]/g, '').toString());
-        
+        if($("#totals1").val()==''){
+            $("#totals1").val('0');
+        }
+        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
+
         if($("#bayars1").val()==''){
             $("#bayars1").val('0');
         }
+        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#vouchers1").val()==''){
             $("#vouchers1").val('0');
         }
+        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#ambilsavings1").val()==''){
             $("#ambilsavings1").val('0');
         }
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());        
-        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString());        
-        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
-        var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
-        if(ambilsavings1>saldo1){
-            $("#ambilsavings1").val(saldo1);
+        var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());       
+        var saldosaving1=parseFloat($('#saldosaving1').val().replace(/[^,\d]/g, '').toString());       
+        if(ambilsavings1>=saldosaving1){
+            var ambilsavings1 = saldosaving1;
+            var bayarx = bayars1 + vouchers1 + ambilsavings1;
+            setTimeout(() => {                
+                $("#ambilsavings1").val(formatAngka(ambilsavings1,''));
+            }, 10);
         }
-
-
-        var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        var bayarx = bayars1 + vouchers1 + ambilsavings1;
+        var kembalix = bayarx - totals1; 
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2013,37 +2074,44 @@ $(document).ready(function(){
             document.getElementById('kembalis1').setAttribute("style","background-color:red");
             document.getElementById('savings1').setAttribute("style","background-color:red");
             $("#btn_proses").prop("disabled",true);
-        }  
-        var kembali500 = floorn(kembalix,500);
-        var savings1 = kembalix - kembali500;
-
+        } 
+        var kembali500 = floorn(kembalix,500);        
         $('#kembalis1').val(formatAngka(kembali500,''));
-        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString()); 
-
-        $('#savings1').val(formatAngka(savings1,''));
-        var savings1=parseFloat($('#savings1').val().replace(/[^,\d]/g, '').toString());        
+        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());
+        var savingx = kembalix - kembali500;
+        $('#savings1').val(formatAngka(savingx,''));       
     });
     $("#ambilsavings1").on('keydown',function(){
-        var saldo1=parseFloat($('#saldo1').val().replace(/[^,\d]/g, '').toString());
-        
+        if($("#totals1").val()==''){
+            $("#totals1").val('0');
+        }
+        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
+
         if($("#bayars1").val()==''){
             $("#bayars1").val('0');
         }
+        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#vouchers1").val()==''){
             $("#vouchers1").val('0');
         }
+        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString()); 
+
         if($("#ambilsavings1").val()==''){
             $("#ambilsavings1").val('0');
         }
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());        
-        var bayars1=parseFloat($('#bayars1').val().replace(/[^,\d]/g, '').toString());        
-        var vouchers1=parseFloat($('#vouchers1').val().replace(/[^,\d]/g, '').toString());
         var ambilsavings1=parseFloat($('#ambilsavings1').val().replace(/[^,\d]/g, '').toString());
-        if(ambilsavings1>saldo1){
-            $("#ambilsavings1").val(saldo1);
+        var saldosaving1=parseFloat($('#saldosaving1').val().replace(/[^,\d]/g, '').toString());       
+        if(ambilsavings1>=saldosaving1){
+            var ambilsavings1 = saldosaving1;
+            var bayarx = bayars1 + vouchers1 + ambilsavings1;
+            setTimeout(() => {                
+                $("#ambilsavings1").val(formatAngka(ambilsavings1,''));
+            }, 10);
         }
-        var kembalix = bayars1 + vouchers1 + ambilsavings1 - totals1;   
-        if(kembalix>'0'){
+        var bayarx = bayars1 + vouchers1 + ambilsavings1;
+        var kembalix = bayarx - totals1; 
+        if(kembalix>='0'){
             document.getElementById('kembalis1').setAttribute("style","background-color:white");
             document.getElementById('savings1').setAttribute("style","background-color:white");
             $("#btn_proses").prop("disabled",false);
@@ -2051,71 +2119,12 @@ $(document).ready(function(){
             document.getElementById('kembalis1').setAttribute("style","background-color:red");
             document.getElementById('savings1').setAttribute("style","background-color:red");
             $("#btn_proses").prop("disabled",true);
-        }  
-        var kembali500 = floorn(kembalix,500);
-        var savings1 = kembalix - kembali500;
-
+        } 
+        var kembali500 = floorn(kembalix,500);        
         $('#kembalis1').val(formatAngka(kembali500,''));
-        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString()); 
-
-        $('#savings1').val(formatAngka(savings1,''));
-        var savings1=parseFloat($('#savings1').val().replace(/[^,\d]/g, '').toString());        
-    });
-
-    $("#idjenispembayaran1").on('change',function(){
-        setTimeout(() => {
-            var x =parseFloat($("#idjenispembayaran1").val());
-            if(x=='99'){
-                document.getElementById('judulkali1').removeAttribute("hidden");
-                document.getElementById('persenjasa1').removeAttribute("hidden");
-                document.getElementById('judulpersenjasa1').removeAttribute("hidden");
-                // document.getElementById('nilaihutang1').removeAttribute("hidden");
-                document.getElementById('judulnilaihutang1').removeAttribute("hidden");
-            }else{
-                document.getElementById('judulkali1').setAttribute("hidden","hidden");
-                document.getElementById('persenjasa1').setAttribute("hidden","hidden");
-                document.getElementById('judulpersenjasa1').setAttribute("hidden","hidden");
-                // document.getElementById('nilaihutang1').setAttribute("hidden","hidden");
-                document.getElementById('judulnilaihutang1').setAttribute("hidden","hidden");
-            }
-            
-        }, 500);
-        
-    });
-
-    $("#persenjasa1").on('change',function(){
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
-
-        if($("#persenjasa1").val()==''){
-            $("#persenjasa1").val('0');
-            var x = parseFloat($("#persenjasa1").val())
-        }else{
-            var x = parseFloat($("#persenjasa1").val())
-        }
-
-        var totaljasa1=totals1*parseFloat(x)/100;
-        var nilaihutangx = totals1 + totaljasa1;
-        var nilaihutang = formatAngka(Math.round(nilaihutangx));
-
-        $("#nilaihutang1").val(nilaihutang);
-        
-    });
-    $("#persenjasa1").on('keydown',function(){
-        var totals1=parseFloat($('#totals1').val().replace(/[^,\d]/g, '').toString());
-
-        if($("#persenjasa1").val()==''){
-            $("#persenjasa1").val('0');
-            var x = parseFloat($("#persenjasa1").val())
-        }else{
-            var x = parseFloat($("#persenjasa1").val())
-        }
-
-        var totaljasa1=totals1*parseFloat(x)/100;
-        var nilaihutangx = totals1 + totaljasa1;
-        var nilaihutang = formatAngka(Math.round(nilaihutangx));
-
-        $("#nilaihutang1").val(nilaihutang);
-        
+        var kembalis1=parseFloat($('#kembalis1').val().replace(/[^,\d]/g, '').toString());
+        var savingx = kembalix - kembali500;
+        $('#savings1').val(formatAngka(savingx,''));       
     });
     
     $("#btn_cetak").on('click',function(){        
@@ -2162,7 +2171,7 @@ $(document).ready(function(){
         $.ajax({
             enctype: 'multipart/form-data',
             type   : 'post',
-            url    : '{{route('pos01.transaksi.bkeluar_posting')}}',
+            url    : '{{route('pos01.transaksi.bayarhutang_posting')}}',
             data: formData,
             cache: false,
             processData: false,
@@ -2198,7 +2207,7 @@ $(document).ready(function(){
     function modal_hapus(){
         Swal.fire({
         title: 'Are you sure delete?',
-        text: $('#data3b').val(),
+        text: $('#data3a').val(),
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -2231,11 +2240,11 @@ $(document).ready(function(){
 
     function data_hapus(){			
         var id3=$('#id3').val();       
-        var data3b=$('#data3b').val();
+        var data3b=$('#data3a').val();
         
         $.ajax({
             type  : 'get',
-            url   : '{{url('pos01/transaksi/bkeluardestroy')}}/'+id3,
+            url   : '{{url('pos01/transaksi/bayarhutangdestroy')}}/'+id3,
             async : false,
             dataType : 'json',					
             success : function(data){
@@ -2271,8 +2280,6 @@ $(document).ready(function(){
         var nomorbukti1 = $('#nomorbukti1').val();
         var tgltransaksi1 = $('#tgltransaksi1').val();
         var idanggota1 = $('#idanggota1').val();
-        var persenjasa1 = $('#persenjasa1').val();
-        var nilaihutang1 = $('#nilaihutang1').val().replace(/[^,\d]/g, '').toString();
                 
         let formData = new FormData();
         
@@ -2291,13 +2298,11 @@ $(document).ready(function(){
             formData.append('nomorbukti1', nomorbukti1);
             formData.append('tgltransaksi1', tgltransaksi1);
             formData.append('idanggota1', idanggota1);                     
-            formData.append('persenjasa1', persenjasa1);                     
-            formData.append('nilaihutang1', nilaihutang1);                     
           
         $.ajax({
             enctype: 'multipart/form-data',
             type   : 'post',
-            url    : '{{route('pos01.transaksi.bkeluar_proses')}}',
+            url    : '{{route('pos01.transaksi.bayarhutang_proses')}}',
             data: formData,
             cache: false,
             processData: false,

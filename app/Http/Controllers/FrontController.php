@@ -318,7 +318,7 @@ class FrontController extends Controller
                     'awaljam' => Carbon::now(), 
                     'kode' => $kode,
                     'aplikasi' => $aplikasi,
-                    'idaplikasi' => $idaplikasi                   
+                    'idaplikasi' => $idaplikasi,
                 ]);
                 return redirect()->intended('/admin');
             } else {
