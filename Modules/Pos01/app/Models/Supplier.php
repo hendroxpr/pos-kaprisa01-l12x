@@ -25,4 +25,11 @@ class Supplier extends Model
     // {
     //     // return AnggotaFactory::new();
     // }
+    public function bmasuk()
+    {
+        return $this->hasMany(Bmasuk::class,'idsupplier','id');
+    }
+
+
+
 }

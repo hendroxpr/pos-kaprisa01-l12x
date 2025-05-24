@@ -1717,7 +1717,8 @@ $(document).ready(function(){
         var hasil=nx*n1;
         return n1>1 ? hasil :'0';
     }
-    $("#btn_pembayaran1").on('click',function(){ 
+   
+   $("#btn_pembayaran1").on('click',function(){ 
        var nomorbukti1 = $('#nomorbukti1').val();       
        var a1 = $("#displaysubtotal1").text();
        var b1 = $("#nomorpostingnya1").val();
@@ -1736,10 +1737,7 @@ $(document).ready(function(){
                 document.getElementById('savings1').setAttribute("style","background-color:red");
                 
             }
-       }
-
-
-       
+       }       
     });
 
 

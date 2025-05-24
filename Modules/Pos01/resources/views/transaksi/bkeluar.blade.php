@@ -66,7 +66,7 @@
             
             <div class="col-md-4">
                 <div class="row">
-                    <div class="col-md-4  text-right">
+                    <div class="col-md-4 text-right">
                         <h6 class="mt-2">Tgl. Transaksi</h6>
                     </div>
                     <div class="col-md-7">

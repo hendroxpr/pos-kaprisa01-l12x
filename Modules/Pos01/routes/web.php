@@ -134,6 +134,8 @@ Route::post('/transaksi/bmasuknomorbukti', [BmasukController::class, 'nomorbukti
 Route::post('/transaksi/bmasuknomorposting', [BmasukController::class, 'nomorposting'])->name('pos01.transaksi.bmasuk_nomorposting')->middleware('auth'); /* buat nomorposting */
 Route::get('/transaksi/bmasuklistbarang', [BmasukController::class, 'listbarang'])->name('pos01.transaksi.bmasuk_listbarang')->middleware('auth'); /* menampilkan list barang */
 Route::get('/transaksi/bmasuklistruang', [BmasukController::class, 'listruang'])->name('pos01.transaksi.bmasuk_listruang')->middleware('auth'); /* menampilkan list ruang */
+Route::get('/transaksi/bmasuklistjenispembayaran', [BmasukController::class, 'listjenispembayaran'])->name('pos01.transaksi.bmasuk_listjenispembayaran')->middleware('auth'); /* menampilkan list jenispembayaran */
+Route::get('/transaksi/bmasuklistsupplier', [BmasukController::class, 'listsupplier'])->name('pos01.transaksi.bmasuk_listsupplier')->middleware('auth'); /* menampilkan list supplier */
 Route::post('/transaksi/bmasukcreate', [BmasukController::class, 'create'])->name('pos01.transaksi.bmasuk_create')->middleware('auth'); /* menambah data bmasuk */
 Route::get('/transaksi/bmasukedit/{id}', [BmasukController::class, 'edit'])->name('pos01.transaksi.bmasuk_edit')->middleware('auth'); /* menampilkan data yang akan dirubah */
 Route::post('/transaksi/bmasukupdate', [BmasukController::class, 'update'])->name('pos01.transaksi.bmasuk_update')->middleware('auth'); /* update data bmasuk */

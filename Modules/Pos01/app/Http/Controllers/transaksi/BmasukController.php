@@ -15,6 +15,7 @@ use App\Models\Menusub;
 use Modules\Pos01\Models\Barang;
 use Modules\Pos01\Models\Barangruang;
 use Modules\Pos01\Models\Bmasuk;
+use Modules\Pos01\Models\Jenispembayaran;
 use Modules\Pos01\Models\Ruang;
 use Modules\Pos01\Models\Satuan;
 use Modules\Pos01\Models\Seksi;
@@ -22,6 +23,7 @@ use Modules\Pos01\Models\Stok;
 use Modules\Pos01\Models\Stokfifo;
 use Modules\Pos01\Models\Stoklifo;
 use Modules\Pos01\Models\Stokmova;
+use Modules\Pos01\Models\Supplier;
 use Yajra\DataTables\Facades\DataTables;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -89,10 +91,13 @@ class BmasukController extends Controller
             'tgltransaksi' => $validatedData['tgltransaksi1'],
             'nomorbuktia' => $validatedData['nomorbuktia1'],
             'nomorba' => $nomorba1,
+            
             'idbarang' => $validatedData['idbarang1'],
             'idruang' => $validatedData['idruang1'],
-
             'nomorbuktib' => $request['nomorbuktib1'],
+            'idjenispembayaran' => $request['idjenispembayaran1'],
+            'idsupplier' => $request['idsupplier1'],
+            'xangsuran' => $request['kali1'],
             
             'qty' => $request['qty1'],
             'hbs' => $request['hbs1'],
@@ -783,7 +788,25 @@ class BmasukController extends Controller
         $data = Bmasuk::where('id', '=', $id)->delete();
         return json_encode(array('data' => $data));
     }
-
+    function listsupplier()
+    {
+        $idx = '0';
+        $isix = 'UMUM';
+        $tampil = Supplier::where('id','<>','0')
+            ->orderBy('supplier', 'asc')
+            ->get();
+            echo "<option value='" . $idx . "'>". $isix . "</option>";
+        foreach ($tampil as $baris) {
+            echo "<option value='" . $baris->id . "'>". $baris->supplier . "</option>";
+        }
+    }
+    function listjenispembayaran()
+    {
+        $tampil = Jenispembayaran::where('id','<>','0')->get();
+        foreach ($tampil as $baris) {
+            echo "<option value='" . $baris->id . "'>". $baris->jenispembayaran . "</option>";
+        }
+    }
     function listbarang()
     {
         $tampil = Barang::orderBy('nabara','asc')->get();

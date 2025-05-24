@@ -46,22 +46,40 @@
     @endif
 @endif
 
-
+<style>
+    .block {
+      width: 100%;
+      border: none;
+      /* background-color: #04AA6D; */
+      color: white;
+      /* padding: 5px 10px; */
+      font-size: 1em;
+      cursor: pointer;
+      text-align: center;
+    }
+    
+    .block:hover {
+      background-color: #ddd;
+      color: black;
+    }
+</style>
 
     <div class="box-header mb-3">  
         <div class="row">
             
             <div class="col-md-4">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-right">
                         <h6 class="mt-2">Tgl. Transaksi</h6>
                     </div>
                     <div class="col-md-7">
+                        <input name="nomorpostingnya1" id="nomorpostingnya1" type="hidden"> 
+                        <input name="tglpostingnya1" id="tglpostingnya1" type="hidden">
                         <input name="tgltransaksi1" id="tgltransaksi1" class="w3-input w3-border" maxlength="10" type="text" placeholder="Tgl Transaksi" required autocomplete="off" value="{{ $tgltransaksi }}">                       
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-right">
                         <h6 class="mt-2">Nomor Bukti-a</h6>
                     </div>
                     <div class="col-md-7 input-group">
@@ -72,7 +90,15 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-right">
+                        <h6 class="mt-2">Supplier</h6>
+                    </div>
+                    <div class="col-md-7">
+                        <select  name="idsupplier1" id="idsupplier1" class=" form-control w3-input w3-border" style="border-radius:0px; border:none; display:block;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-right">
                         <h6 class="mt-2">Nomor Bukti-b</h6>
                     </div>
                     <div class="col-md-7">
@@ -82,6 +108,7 @@
             </div>
             
             <div class="col-md-4">
+                
                 {{--  --}}
             </div>
 
@@ -90,7 +117,16 @@
                     <a href="{{ url('/') }}{{ $link }}" class="btn bg-success rounded-0"><i style="font-size:18px" class="fa">&#xf021;</i> Refresh</a>            
                     <button id="btn_tambah1" name="btn_tambah1" type="button" class="btn bg-primary rounded-0"><i class="fas fa-plus"></i> Tambah</button>	            
                     <button id="btn_posting1" name="btn_posting1" type="button" class="btn bg-warning rounded-0"><i class="fa fa-upload"></i> Posting</button>	            
-                </div> 
+                </div>
+                
+                <div class="row mt-1">                    
+                    <div class="col-md-12 text-center" style="font-size: 4em; color:red;">
+                        <b><span id='displaysubtotal1' name='displaysubtotal1'></span></b>
+                    </div>
+                    <div class="block">
+                        <button class="block bg-primary" id="btn_pembayaran1" name="btn_pembayaran1" style="padding-top: 15px; padding-bottom: 15px;"> Pembayaran <i style='font-size:18px' class='fas'>&#xf02f;</i></button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -453,6 +489,127 @@
 </div>
 <!-- end ModalPosting -->
 
+<!-- ModalPembayaran modal fade-->
+<div class="modal fade" id="ModalPembayaran"  data-backdrop="static">
+    <div class="modal-dialog modal-default">  <!-- modal-(sm, lg, xl) ukuran lebar modal -->
+        <div class="modal-content bg-primary w3-animate-zoom">
+            
+            <div class="modal-header">
+                    <h3 class="modal-title"><i style="font-size:18" class='fas'>&#xf02f;</i><b> Pembayaran</b></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    
+            </div>
+            <form class="form-horizontal">
+                @csrf
+                <div class="modal-body" style="font-size: 1.5em;" >
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Sub Total</h4>
+                                </div>
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
+                                    <input name="subtotals1" id="subtotals1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('subtotals1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                </div>                            								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">PPN</h4>
+                                </div>                                						  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
+                                    <input name="ppns1" id="ppns1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="" value="{{ old('ppns1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
+                                </div>  								  
+                            </div> 			
+                                         
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Diskon</h4>
+                                </div>							  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
+                                    <input name="diskons1" id="diskons1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="" value="{{ old('diskons1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
+                                </div>								  
+                            </div>  			
+                            
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Total</h4>
+                                </div>								  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;" align="right">
+                                    <input name="totals1" id="totals1" class="w3-input w3-border text-right" type="search" placeholder="" value="{{ old('totals1') }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  readonly>
+                                </div>								  
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Bayar</h4>
+                                </div>                                							  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;" align="right">
+                                    <input name="bayars1" id="bayars1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="bayar" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" autofocus>
+                                </div>								  
+                            </div>  			
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Voucher</h4>
+                                </div>							  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;" align="right">
+                                    <input name="vouchers1" id="vouchers1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="voucher" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
+                                </div>								  
+                            </div>  			
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Ambil Savings</h4>
+                                </div>								  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;" align="right">
+                                    <input name="ambilsavings1" id="ambilsavings1" class="w3-input w3-border text-right" style=" background-color: aqua;" type="search" placeholder="ambil savings" value="0"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);">
+                                </div>								  
+                            </div>  			
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Kembalian</h4>
+                                </div>							  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
+                                    <input name="kembalis1" id="kembalis1" class="w3-input w3-border text-right" style="background-color: red;" type="search" placeholder="" value="{{ old('kembalis1') }}" readonly>
+                                </div>								  
+                            </div>  			
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Savings</h4>
+                                </div>                                								  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
+                                    <input name="savings1" id="savings1" class="w3-input w3-border text-right" style="background-color: red;" type="search" placeholder="" value="{{ old('savings1') }}" readonly>
+                                </div>								  
+                            </div> 
+                            <div class="row">
+                                <div class="col-md-5 mt-2" align="right" style="padding-right: 10px; padding-left: 0px;">										
+                                    <h4 class="mt-2">Jenis Pembayaran</h4>
+                                </div>                                								  
+                                <div class="col-md-7" style="padding-right: 20px; padding-left: 0px;">
+                                    <select name="idjenispembayaran1" id="idjenispembayaran1" class="w3-input w3-border" style=" background-color: aqua;"></select>
+                                    <input name="jmls1" id="jmls1" class="" type="hidden">
+                                    
+                                </div>								  
+                            </div>
+                            
+                        </div>
+                        {{-- <div class="col-md-6">
+
+                        </div> --}}
+                    </div>    
+                    
+                </div>
+                <div class="modal-footer justify-content-between" align="right">
+                    <button id ="btn_tutup" name="btn_tutup"type="button" class="w3-button w3-border w3-border-white" data-dismiss="modal">Tutup</button>
+                    <button id="btn_cetak" name="btn_cetak" type="button" class="w3-button w3-border w3-border-white" ><i style="font-size:18px" class='fas'>&#xf02f;</i> Print</button>
+                    <button id="btn_proses" name="btn_proses" type="button" class="w3-button w3-border w3-border-white" disabled><i style="font-size:18" class="fa">&#xf013;</i> Proses</button>
+                </div>
+            </form>
+        </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- end ModalPembayaran -->
+
     <!-- khusus menyimpan data yang akan dihapus -->
     <input name="id3" id="id3"type="hidden">	
     <input name="data3a" id="data3a"type="hidden">	
@@ -570,6 +727,37 @@ $(document).ready(function(){
         $('#tglposting5').text(tglsekarang);
     }
 
+    setTimeout(() => {
+        document.getElementById('kali1').setAttribute("hidden","hidden");
+        document.getElementById('judulkali1').setAttribute("hidden","hidden");    
+    }, 100);
+
+    tampil_listsupplier();
+    //menampilkan combo supplier
+    function tampil_listsupplier(){				
+        $.ajax({
+            type: 'get',
+            url   : '{{route('pos01.transaksi.bmasuk_listsupplier')}}',
+            
+            success: function(data){				    
+                $("#idsupplier1").html(data);                
+            }
+        })                    
+    
+    }
+    tampil_listjenispembayaran();
+    //menampilkan combo jenispembayaran
+    function tampil_listjenispembayaran(){				
+        $.ajax({
+            type: 'get',
+            url   : '{{route('pos01.transaksi.bmasuk_listjenispembayaran')}}',
+            
+            success: function(data){				    
+                $("#idjenispembayaran1").html(data);                
+            }
+        })                    
+    }
+
     tampil_listbarang();
     //menampilkan combo barang
     function tampil_listbarang(){				
@@ -607,11 +795,9 @@ $(document).ready(function(){
             buttons : [ {extend: 'colvis', postfixButtons: [ 'colvisRestore' ] }, {extend:'copy'}, {extend:'csv'}, {extend: 'pdf', orientation: 'portrait', pageSize: 'A4', title:'{{ $caption }}'}, {extend: 'excel', title: '{{ $caption }}'}, {extend:'print', orientation: 'portrait', pageSize: 'A4', title: '{{ $caption }}'}, ],
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');   
      }
-     
     
     //tampilkan dalam tabel ->OK
     function tampil_data(){	
-        
         $.ajax({
             type  : 'get',
             url   : `{{route('pos01.transaksi.bmasuk_show')}}`,
@@ -619,6 +805,8 @@ $(document).ready(function(){
             dataType : 'json',
                                              
             success : function(data){
+                var idjenispembayaran;
+                var idsupplier;
                 var nbb;
                 var jumlahy;
                 var hppx = 0;
@@ -635,6 +823,9 @@ $(document).ready(function(){
                 for(i=0; i<resultData.length; i++){
                     nbb = resultData[i].nomorbuktib;
                     $('#nomorbuktib1').val(nbb);
+                    idjenispembayaran = resultData[i].idjenispembayaran;
+                    idsupplier = resultData[i].idsupplier;
+                    
                     qtyx = parseInt(qtyx) + parseInt(resultData[i].qty);
                     hppx = parseInt(hppx) + parseInt(resultData[i].hpp);
                     ppnx = parseInt(ppnx) + parseInt(resultData[i].ppn);
@@ -684,9 +875,14 @@ $(document).ready(function(){
                                 '<td>'+(resultData[i].keterangan ? resultData[i].keterangan : '')+'</td>'+
                                 aksi +
                             '</tr>';
+                            $('#nomorpostingnya1').val(resultData[i].nomorposting);            
+                            $('#tglpostingnya1').val(resultData[i].tglposting);
     
                 }
                 
+                   
+
+
                 $('#show_data').html(html); 
                 $('#jmlitem5').text(i);                            
                 $('#jmlbarang5').text(qtyx);
@@ -695,10 +891,19 @@ $(document).ready(function(){
                 $('#totaldiskon1').text(formatAngka(diskonx,''));
                 $('#totaljumlah1').text(formatAngka(jumlahx,''));
                 $('#totalnilai5').text(formatAngka(jumlahx,''));
+                $('#displaysubtotal1').text($('#totaljumlah1').text());
+                $('#subtotals1').val(formatAngka(hppjx,''));
+                $('#ppns1').val(formatAngka(ppnx,''));
+                $('#diskons1').val(formatAngka(diskonx,''));
+                $('#totals1').val(formatAngka(jumlahx,''));
                 if(i=='0'){
                     $('#btn_tambah1').removeAttr('disabled');
                     $('#btn_posting1').removeAttr('disabled');
-                }                            
+                } 
+                setTimeout(() => {
+                    $('#idjenispembayaran1').val(idjenispembayaran);                           
+                    $('#idsupplier1').val(idsupplier);                           
+                }, 500);                           
             }
 
     
@@ -912,6 +1117,22 @@ $(document).ready(function(){
        setTimeout(() => {
            kirimsyarat();                  
        }, 200);
+    });
+
+    $("#idjenispembayaran1").on('change',function(){
+        setTimeout(() => {
+            var x =parseFloat($("#idjenispembayaran1").val());
+            if(x=='99'){
+                document.getElementById('kali1').removeAttribute("hidden");
+                document.getElementById('judulkali1').removeAttribute("hidden");
+            }else{
+                $("#kali1").val('1');
+                document.getElementById('kali1').setAttribute("hidden","hidden");
+                document.getElementById('judulkali1').setAttribute("hidden","hidden");
+            }
+            
+        }, 100);
+        
     });
     
     $("#qty1").on('change',function(){ 
@@ -1231,14 +1452,14 @@ $(document).ready(function(){
         }
     }); 
     
-    
-    
     function data_simpan(){
         var judul = $('#idbarang1 option:selected').text();
         var id1=$('#id1').val();			
         var tgltransaksi1=$('#tgltransaksi1').val();
         var nomorbuktia1=$('#nomorbuktia1').val();
-        var nomorbuktib1=$('#nomorbuktib1').val();
+        var idjenispembayaran1=$('#idjenispembayaran1').val();
+        var idsupplier1=$('#idsupplier1').val();
+        var kali1=$('#kali1').val();
         var idbarang1=$('#idbarang1').val();
         var idruang1=$('#idruang1').val();
         var qty1=$('#qty1').val().replace(/[^,\d]/g, '').toString();;
@@ -1255,6 +1476,9 @@ $(document).ready(function(){
             formData.append('tgltransaksi1', tgltransaksi1);
             formData.append('nomorbuktia1', nomorbuktia1);
             formData.append('nomorbuktib1', nomorbuktib1);
+            formData.append('idsupplier1', idsupplier1);
+            formData.append('idjenispembayaran1', idjenispembayaran1);
+            formData.append('kali1', kali1);
             formData.append('idbarang1', idbarang1);
             formData.append('idruang1', idruang1);
             formData.append('hbs1', hbs1);
@@ -1421,6 +1645,37 @@ $(document).ready(function(){
                 }
             }); 
     }
+
+    function floorn(angka,n){
+        var angka1=parseFloat(angka);
+        var n1=parseFloat(n);
+        var nx=Math.floor(angka1/n1);
+        var hasil=nx*n1;
+        return n1>1 ? hasil :'0';
+    }
+   
+   $("#btn_pembayaran1").on('click',function(){ 
+
+       var nomorbuktia1 = $('#nomorbuktia1').val();       
+       var a1 = $("#displaysubtotal1").text();
+       var b1 = $("#nomorpostingnya1").val();
+       if(a1=='0'||a1==''){
+            swaldatakosong('- Data belum ada -');
+       }else{
+            if(b1==''){
+                swaldatakosong('- Data belum diposting -');
+                // $("#ModalPembayaran").modal('show');
+            }else{                
+                setTimeout(() => {
+                    displaypembayaran(nomorbuktia1);
+                }, 100);
+                $("#ModalPembayaran").modal('show');
+                document.getElementById('kembalis1').setAttribute("style","background-color:red");
+                document.getElementById('savings1').setAttribute("style","background-color:red");
+                
+            }
+       }       
+    });
     
     //modal sweet art posting		
     function modal_posting(){
