@@ -467,6 +467,223 @@ class HutangpiutangController extends Controller
 
     }
 
+    public function showhutangpiutangsajacustomer()
+    {
+        $tgltransaksi1 = session('tgltransaksi1');
+        if($tgltransaksi1==''){
+            $tgltransaksi1 = session('memtanggal');
+        }    
+        $tgltransaksi2 = session('tgltransaksi2');
+        if($tgltransaksi2==''){
+            $tgltransaksi2 = session('memtanggal');
+        }
+        
+        $hutang = Hutang::select('*')
+            ->where('tglstatus','>=',$tgltransaksi1)
+            ->where('tglstatus','<=',$tgltransaksi2)
+            ->where('kodepokok','=','1')
+            ->where('status','=','hutangcus')
+            ->with('anggota','supplier')
+            ->get();
+        $datax = DataTables::of($hutang                          
+            );
+
+        $data = $datax
+            ->addIndexColumn()
+           
+            ->addColumn('nama', function ($row) {
+                return $row->idanggota ? $row->anggota->nama : '';
+            })
+            ->addColumn('nia', function ($row) {
+                return $row->idanggota ? $row->anggota->nia : '';
+            })
+            ->addColumn('lembaga', function ($row) {
+                return $row->idanggota ? $row->anggota->lembaga->lembaga : '';
+            })
+            ->addColumn('xangsuran', function ($row) {
+                return $row->angsuranke.'/'.$row->xangsuran;
+            })
+            ->addColumn('nilaiangsuran', function ($row) {
+                return number_format($row->asli/$row->xangsuran,0);
+            })
+            ->addColumn('asli', function ($row) {
+                return number_format($row->asli,0);
+            })
+            ->addColumn('sudahbayar', function ($row) {
+                $jml = Hutang::where('kodepokok','=','2')
+                    ->where('nomorstatusasal','=',$row->nomorstatus)
+                    ->where('status','=','bayarcus')
+                    ->with('anggota','supplier')
+                    ->orderBy('id','desc')
+                    ->count();
+                if($jml<>'0'){
+                    $hutang = Hutang::select('*')->limit(1)
+                        ->where('kodepokok','=','2')
+                        ->where('nomorstatusasal','=',$row->nomorstatus)
+                        ->where('status','=','bayarcus')
+                        ->with('anggota','supplier')
+                        ->orderBy('id','desc')
+                        ->get();
+                        foreach ($hutang as $baris) {
+                            $saldo = $baris->akhir;
+                        }
+                }else{
+                    $saldo=$row->asli;
+                } 
+
+                $sudahbayar=$row->asli-$saldo;
+                return number_format($sudahbayar,0);
+            })
+            ->addColumn('saldo', function ($row) {
+                $jml = Hutang::where('kodepokok','=','2')
+                    ->where('nomorstatusasal','=',$row->nomorstatus)
+                    ->where('status','=','bayarcus')
+                    ->with('anggota','supplier')
+                    ->orderBy('id','desc')
+                    ->count();
+                if($jml<>'0'){
+                    $hutang = Hutang::select('*')->limit(1)
+                        ->where('kodepokok','=','2')
+                        ->where('nomorstatusasal','=',$row->nomorstatus)
+                        ->where('status','=','bayarcus')
+                        ->with('anggota','supplier')
+                        ->orderBy('id','desc')
+                        ->get();
+                        foreach ($hutang as $baris) {
+                            $saldo = $baris->akhir;
+                        }
+                }else{
+                    $saldo=$row->asli;
+                } 
+
+                return number_format($saldo,0);
+            })
+            
+                        
+            ->rawColumns([
+                'xangsuran',
+                'nilaiangsuran',
+                'sudahbayar',
+                'saldo',
+                'qty',
+                'satuan',
+                'totalhpp',
+                ])
+
+            ->make(true);
+
+            return $data;
+
+    }
+    public function showhutangpiutangsajasupplier()
+    {
+        $tgltransaksi1 = session('tgltransaksi1');
+        if($tgltransaksi1==''){
+            $tgltransaksi1 = session('memtanggal');
+        }    
+        $tgltransaksi2 = session('tgltransaksi2');
+        if($tgltransaksi2==''){
+            $tgltransaksi2 = session('memtanggal');
+        }
+
+        $hutang = Hutang::select('*')
+            ->where('tglstatus','>=',$tgltransaksi1)
+            ->where('tglstatus','<=',$tgltransaksi2)
+            ->where('kodepokok','=','1')
+            ->where('status','=','hutangsup')
+            ->with('anggota','supplier')
+            ->get();
+        $datax = DataTables::of($hutang                          
+            );
+
+        $data = $datax
+            ->addIndexColumn()
+           
+            ->addColumn('supplier', function ($row) {
+                return $row->idsupplier ? $row->supplier->supplier : '';
+            })
+            ->addColumn('kode', function ($row) {
+                return $row->idsupplier ? $row->supplier->kode : '';
+            })
+            ->addColumn('alamat', function ($row) {
+                return $row->idsupplier ? $row->supplier->alamat : '';
+            })
+            ->addColumn('xangsuran', function ($row) {
+                return $row->angsuranke.'/'.$row->xangsuran;
+            })
+            ->addColumn('nilaiangsuran', function ($row) {
+                return number_format($row->asli/$row->xangsuran,0);
+            })
+            ->addColumn('asli', function ($row) {
+                return number_format($row->asli,0);
+            })
+            ->addColumn('sudahbayar', function ($row) {
+                $jml = Hutang::where('kodepokok','=','2')
+                    ->where('nomorstatusasal','=',$row->nomorstatus)
+                    ->where('status','=','bayarsup')
+                    ->with('anggota','supplier')
+                    ->orderBy('id','desc')
+                    ->count();
+                if($jml<>'0'){
+                    $hutang = Hutang::select('*')->limit(1)
+                        ->where('kodepokok','=','2')
+                        ->where('nomorstatusasal','=',$row->nomorstatus)
+                        ->where('status','=','bayarsup')
+                        ->with('anggota','supplier')
+                        ->orderBy('id','desc')
+                        ->get();
+                        foreach ($hutang as $baris) {
+                            $saldo = $baris->akhir;
+                        }
+                }else{
+                    $saldo=$row->asli;
+                } 
+                
+                $sudahbayar=$row->asli-$saldo;
+                return number_format($sudahbayar,0);
+            })
+            ->addColumn('saldo', function ($row) {
+                $jml = Hutang::where('kodepokok','=','2')
+                    ->where('nomorstatusasal','=',$row->nomorstatus)
+                    ->where('status','=','bayarsup')
+                    ->with('anggota','supplier')
+                    ->orderBy('id','desc')
+                    ->count();
+                if($jml<>'0'){
+                    $hutang = Hutang::select('*')->limit(1)
+                        ->where('kodepokok','=','2')
+                        ->where('nomorstatusasal','=',$row->nomorstatus)
+                        ->where('status','=','bayarsup')
+                        ->with('anggota','supplier')
+                        ->orderBy('id','desc')
+                        ->get();
+                        foreach ($hutang as $baris) {
+                            $saldo = $baris->akhir;
+                        }
+                }else{
+                    $saldo=$row->asli;
+                } 
+
+                return number_format($saldo,0);
+            })
+            
+                        
+            ->rawColumns([
+                'xangsuran',
+                'nilaiangsuran',
+                'sudahbayar',
+                'saldo',
+                'qty',
+                'satuan',
+                'totalhpp',
+                ])
+
+            ->make(true);
+
+            return $data;
+
+    }
+
     public function edit($id)
     {
         $data = Barangruang::where('id', '=', $id)->get();

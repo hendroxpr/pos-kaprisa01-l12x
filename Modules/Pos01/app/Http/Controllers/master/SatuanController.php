@@ -104,10 +104,9 @@ class SatuanController extends Controller
     {
         
         $satuan = Satuan::get();
-        $datax = DataTables::of($satuan                          
-            );
+        // $datax = DataTables::of($satuan);
 
-        $data = $datax
+        $data = DataTables::of($satuan)
             ->addIndexColumn()
            
             ->addColumn('action', function ($row) {

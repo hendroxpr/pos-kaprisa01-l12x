@@ -526,17 +526,6 @@ $(document).ready(function(){
 			
 		}
 
-    //menampilkan combo barang
-    function tampil_listbarang(){				
-        $.ajax({
-            type: 'get',
-            url   : '{{route('pos01.laporan.kartustok_listbarang')}}',
-            
-            success: function(data){				    
-                $("#idbarang1").html(data);                
-            }
-        })                    
-    }
     
     setTimeout(() => {
         if($('#tabstok1').val()=='tab-stokrekap'){
@@ -686,6 +675,18 @@ $(document).ready(function(){
         });
     }
  
+    //menampilkan combo barang
+    function tampil_listbarang(){				
+        $.ajax({
+            type: 'get',
+            url   : '{{route('pos01.laporan.kartustok_listbarang')}}',
+            
+            success: function(data){				    
+                $("#idbarang1").html(data);                
+            }
+        })                    
+    }
+    
     //menampilkan combo ruang
     function tampil_listruang(){				
         $.ajax({
@@ -695,7 +696,6 @@ $(document).ready(function(){
             success: function(data){				    
                 $("#idruang1").html(data);
                 $("#idruang1").val({{ $idruang }});
-
             }
         })                    
     }
